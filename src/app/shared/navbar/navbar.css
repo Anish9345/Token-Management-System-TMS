@@ -1,0 +1,8 @@
+.commonNaveStyle{
+    color: white;
+}
+
+.commonNaveStyle:hover{
+    cursor: pointer;
+    color: black;
+}
