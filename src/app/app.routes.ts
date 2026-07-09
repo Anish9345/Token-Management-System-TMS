@@ -4,6 +4,7 @@ import { Signup } from './pages/signup/signup';
 import { StudentDashboard } from './pages/student-dashboard/student-dashboard';
 import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
 import { Home } from './pages/home/home';
+import { TeacherDashboard } from './pages/teacher-dashboard/teacher-dashboard';
 
 export const routes: Routes = [
     {
@@ -21,6 +22,10 @@ export const routes: Routes = [
     {
         path: "student",
         component: StudentDashboard
+    },
+    {
+        path: "teacher",
+        component: TeacherDashboard
     },
     {
         path: "admin",

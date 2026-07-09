@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DatabaseService } from '../../services/database.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { email } from '@angular/forms/signals';
 
 
 @Component({
@@ -19,11 +20,17 @@ export class Login {
   errorMessage: string = '';
 
   reactiveForm: FormGroup = this.fb.group({
-    userId: [
+    email: [
       "",
       [
         Validators.required,
-        Validators.minLength(2)
+        Validators.email
+      ]
+    ],
+    password: [
+      "",
+      [
+        Validators.required
       ]
     ]
   })
@@ -45,8 +52,11 @@ export class Login {
       return;
     }
 
-    const typedId = this.reactiveForm.value.userId;
-    const foundUser = this.db.users.find(u => u.id === typedId);
+// 2. Extract both values
+    const { email, password } = this.reactiveForm.value;
+
+// 3. Search the database for an exact match of BOTH email and password
+    const foundUser = this.db.users.find(u => u.email === email && u.password === password);
 
     if(foundUser){
       if(foundUser.role === 'Admin'){
@@ -59,8 +69,8 @@ export class Login {
         this.errorMessage = 'Your account is pending approval.';
       }
     }else{
-      this.errorMessage = 'Invalid User ID.';
+      this.errorMessage = 'Invalid Email or Password.';
     }
   }
-
+  
 }
