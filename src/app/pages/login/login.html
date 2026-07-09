@@ -1,3 +1,54 @@
+<!-- without styled -->
+
+<!-- <div>
+  <div>
+    
+    <div>
+      <h2>Welcome to TMS</h2>
+      <p>Sign in to your account</p>
+    </div>
+
+    <form [formGroup]="reactiveForm" (ngSubmit)="onLogin()">
+      
+      <div>
+        <label>User ID</label>
+        
+        <input 
+          type="text" 
+          formControlName="userId"
+          placeholder="Enter u1, u2, or u3"
+        >
+
+        @if (inValid('userId')) {
+          <div>
+            User ID is required (min 2 characters).
+          </div>
+        }
+      </div>
+
+      @if (errorMessage) {
+        <div>
+          {{ errorMessage }}
+        </div>
+      }
+
+      <button type="submit">
+        Sign In
+      </button>
+      
+    </form>
+
+    <div>
+      Don't have an account? 
+      <a routerLink="/signup">Sign up here</a>
+    </div>
+
+  </div>
+</div> -->
+
+
+<!-- styled one  -->
+
 <div class="min-h-[80vh] flex items-center justify-center">
   <div class="bg-white p-8 rounded-lg shadow-md w-96 border border-gray-100">
     
@@ -46,3 +97,5 @@
 
   </div>
 </div>
+
+<!--  -->
