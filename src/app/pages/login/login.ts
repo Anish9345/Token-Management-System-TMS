@@ -59,6 +59,10 @@ export class Login {
     const foundUser = this.db.users.find(u => u.email === email && u.password === password);
 
     if(foundUser){
+
+      // ADD THIS LINE: Save the session!
+      this.db.currentUser = foundUser;
+
       if(foundUser.role === 'Admin'){
         this.router.navigate(['/admin']);
       }else if(foundUser.role == 'Teacher'){

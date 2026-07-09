@@ -48,7 +48,8 @@ export class DatabaseService {
 // 2. An empty array to store the tokens as they are generated
   tokens: Token[] = [];
 
+    // ADD THIS LINE: Save the session!
+    currentUser: User | null = null;
 
 
-    // 2. We will add methods here later (like login(), createCoupon(), etc.)
 }
