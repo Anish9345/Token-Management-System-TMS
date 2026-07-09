@@ -11,15 +11,16 @@ export interface User{
 export interface Event{
     id: string;
     name: string;
-    date: Date;
+    date: string;
+    description: string;
 }
 
-export interface Coupon{
-    id: string;
-    eventId: string;
-    generatedByStudentId: string;
-    generatedAt: Date;
+export interface Token{
+    id: string;               
+    tokenString: string;      
+    userId: string;           // Points directly to the User who made it
+    eventId: string;          // Points directly to the Event
+    createdAt: Date;
     expiresAt: Date;
-    isUsed: boolean;
-    isValid: boolean;
+    status: 'Active' | 'Expired' | 'Used';
 }

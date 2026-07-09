@@ -1,5 +1,5 @@
 import { Injectable} from '@angular/core';
-import { Coupon, Event, User } from '../models';
+import { Event, Token, User } from '../models';
 
 @Injectable({
   providedIn: 'root'
@@ -31,13 +31,24 @@ export class DatabaseService {
     ];
 
     events: Event[] = [
-        { id: 'e1', name: 'Tech Symposium 2026', date: new Date('2026-08-25') },
-        { id: 'e2', name: 'Guest Lecture: Security', date: new Date('2026-09-10') }
+        {
+            id: 'evt_1', 
+            name: 'Cybersecurity CTF Championship', 
+            date: '2026-08-15', 
+            description: 'Annual Capture The Flag event.'
+        },
+        {
+            id: 'evt_3', 
+            name: 'Hackathon: AI Solutions', 
+            date: '2026-10-05', 
+            description: '48-hour coding challenge.' 
+        }
     ];
 
-    coupons: Coupon[] = [];
+// 2. An empty array to store the tokens as they are generated
+  tokens: Token[] = [];
 
-    constructor() {}
+
 
     // 2. We will add methods here later (like login(), createCoupon(), etc.)
 }
