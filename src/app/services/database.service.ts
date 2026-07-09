@@ -7,10 +7,27 @@ import { Coupon, Event, User } from '../models';
 export class DatabaseService {
     // 1. Our Fake Tables (Arrays)
     users: User[] = [
-        { id: 'u1', name: 'Admin User', role: 'Admin' },
-        { id: 'u2', name: 'Test Teacher', role: 'Teacher' },
-        { id: 'u3', name: 'Test User', role: 'Student' }
-
+        { 
+        id: 'u1', // Or 'u01' depending on your regex 
+        name: 'Admin User', 
+        email: 'admin@tms.com', 
+        password: 'password123', 
+        role: 'Admin' 
+        },
+        { 
+        id: 'u2', 
+        name: 'Test Teacher', 
+        email: 'teacher@tms.com', 
+        password: 'password123', 
+        role: 'Teacher' 
+        },
+        { 
+        id: 'u3', 
+        name: 'Test Student', 
+        email: 'student@tms.com', 
+        password: 'password123', 
+        role: 'Student' 
+        }
     ];
 
     events: Event[] = [
