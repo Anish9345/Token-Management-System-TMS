@@ -10,12 +10,22 @@ export class AuthGuard implements CanActivate {
   private db = inject(DatabaseService);
   private router = inject(Router);
 
-  canActivate(): boolean {
-      if(this.db.currentUser && this.db.currentUser.role === 'Student'){
-        return true;
-      }
+  // Notice we added 'route: ActivatedRouteSnapshot' here
+  canActivate(route: ActivatedRouteSnapshot): boolean {
 
-      this.router.navigate(['/login']);
-      return false;
+    // 1. Grab the specific role required for this exact route
+    const expectedRole = route.data['requiredRole'];
+    const user = this.db.currentUser;
+
+    // 2. Check if they are logged in AND their role matches the expected role
+    if (user && user.role === expectedRole) {
+      return true; // Door opens
+    }
+
+    // Door closes
+    this.router.navigate(['/login']);
+    return false;
   }
+
 }
+

@@ -1,1 +1,206 @@
-<p>teacher-dashboard works!</p>
+<!-- <p>teacher-dashboard works!</p> -->
+
+<!-- Without Style -->
+
+<!-- <div>
+  <header>
+    <h1>Teacher Dashboard</h1>
+    <p>Scan and verify student event tokens.</p>
+    <button (click)="onLogout()">Sign Out</button>
+  </header>
+
+  <main>
+    <section>
+      <h2>Verify Token</h2>
+
+      <form [formGroup]="searchForm" (ngSubmit)="onSearch()">
+        <label>Enter Token Code</label>
+        <input type="text" formControlName="tokenCode" placeholder="TKN-XXXX-XXXX">
+        
+        @if (inValid('tokenCode')) {
+          <div>⚠️ Must be in format: TKN-XXXX-XXXX</div>
+        }
+        
+        <button type="submit">Verify Token</button>
+      </form>
+    </section>
+
+    <section>
+      <h2>Scan Result</h2>
+
+      @if (searchResult === 'idle') {
+        <p>Awaiting scan... Please enter a token code.</p>
+      }
+
+      @if (searchResult === 'invalid') {
+        <h3>Invalid Code</h3>
+        <p>{{ errorMessage }}</p>
+      }
+
+      @if (searchResult === 'expired' || searchResult === 'used') {
+        <h3>Access Denied</h3>
+        <p>{{ errorMessage }}</p>
+        
+        <div>
+          <p>Token Details:</p>
+          <ul>
+            <li>Code: {{ searchedToken?.tokenString }}</li>
+            <li>Status: {{ searchedToken?.status }}</li>
+          </ul>
+        </div>
+      }
+
+      @if (searchResult === 'valid') {
+        <h3>Access Granted</h3>
+        <p>This token is valid and ready to use.</p>
+        
+        <div>
+          <p>Token Details:</p>
+          <ul>
+            <li>Code: {{ searchedToken?.tokenString }}</li>
+            <li>Event ID: {{ searchedToken?.eventId }}</li>
+          </ul>
+        </div>
+
+        <button (click)="markAsUsed()">Admit Student (Mark as Used)</button>
+      }
+    </section>
+  </main>
+</div> -->
+
+<!--  -->
+
+<!-- with style -->
+
+<div class="min-h-screen bg-gray-50 p-8">
+  <div class="max-w-4xl mx-auto">
+    
+    <header class="mb-8 flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900">Teacher Dashboard</h1>
+        <p class="text-gray-600 mt-2">Scan and verify student event tokens.</p>
+      </div>
+      
+      <button 
+        (click)="onLogout()"
+        class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-2 px-4 rounded-lg transition-colors border border-red-200"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        Sign Out
+      </button>
+    </header>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 h-fit">
+        <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h4.01M16 20h4M4 12h4m12 0h.01M5 8h2a1 1 0 001-1V5a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1zm12 0h2a1 1 0 001-1V5a1 1 0 00-1-1h-2a1 1 0 00-1 1v2a1 1 0 001 1zM5 20h2a1 1 0 001-1v-2a1 1 0 00-1-1H5a1 1 0 00-1 1v2a1 1 0 001 1z" />
+          </svg>
+          Scan Token
+        </h2>
+
+        <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Enter Token Code</label>
+            <input 
+              type="text" 
+              formControlName="tokenCode" 
+              placeholder="TKN-XXXX-XXXX"
+              class="w-full px-4 py-3 text-lg font-mono uppercase tracking-widest border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 outline-none"
+            >
+            
+            @if (inValid('tokenCode')) {
+              <div class="text-red-500 text-sm font-medium mt-2 bg-red-50 p-2 rounded border border-red-100">
+                ⚠️ Must be in format: <span class="font-mono font-bold text-red-700">TKN-XXXX-XXXX</span>
+              </div>
+            }
+          </div>
+
+          <button 
+            type="submit" 
+            class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-md transition-colors"
+          >
+            Verify Token
+          </button>
+        </form>
+      </div>
+
+      <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+        <h2 class="text-xl font-bold text-gray-800 mb-6">Scan Result</h2>
+
+        @if (searchResult === 'idle') {
+          <div class="text-center py-10 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+            <p class="text-gray-500 font-medium">Awaiting Token Scan...</p>
+          </div>
+        }
+
+        @if (searchResult === 'invalid') {
+          <div class="bg-red-50 border-2 border-red-200 rounded-lg p-6 text-center">
+            <div class="text-red-500 text-4xl mb-2">⚠️</div>
+            <h3 class="text-lg font-bold text-red-800">Invalid Token</h3>
+            <p class="text-red-600 mt-1">{{ errorMessage }}</p>
+          </div>
+        }
+
+        @if (searchResult === 'expired' || searchResult === 'used') {
+          <div class="bg-red-50 border-2 border-red-200 rounded-lg p-6">
+            <div class="text-center mb-4">
+              <div class="text-red-500 text-4xl mb-2">🛑</div>
+              <h3 class="text-lg font-bold text-red-800">Access Denied</h3>
+              <p class="text-red-600 font-medium mt-1">{{ errorMessage }}</p>
+            </div>
+            
+            <div class="bg-white rounded border border-red-100 p-4 text-sm">
+              <div class="flex justify-between mb-2 pb-2 border-b border-gray-100">
+                <span class="text-gray-500">Scanned Code:</span>
+                <span class="font-mono font-bold text-gray-800">{{ searchedToken?.tokenString }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Current Status:</span>
+                <span class="font-bold text-red-600">{{ searchedToken?.status }}</span>
+              </div>
+            </div>
+          </div>
+        }
+
+        @if (searchResult === 'valid') {
+          <div class="bg-green-50 border-2 border-green-200 rounded-lg p-6">
+            <div class="text-center mb-6">
+              <div class="text-green-500 text-5xl mb-2">✅</div>
+              <h3 class="text-xl font-bold text-green-800">Access Granted</h3>
+              <p class="text-green-600 font-medium mt-1">Token is authentic and ready for use.</p>
+            </div>
+
+            <div class="bg-white rounded border border-green-100 p-4 text-sm mb-6">
+              <div class="flex justify-between mb-2 pb-2 border-b border-gray-100">
+                <span class="text-gray-500">Secure Code:</span>
+                <span class="font-mono font-bold text-gray-800">{{ searchedToken?.tokenString }}</span>
+              </div>
+              <div class="flex justify-between">
+                <span class="text-gray-500">Event ID:</span>
+                <span class="font-bold text-gray-800">{{ searchedToken?.eventId }}</span>
+              </div>
+            </div>
+
+            <button 
+              (click)="markAsUsed()"
+              class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md shadow-sm transition-colors text-lg flex items-center justify-center gap-2"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Admit Student
+            </button>
+          </div>
+        }
+
+      </div>
+    </div>
+  </div>
+</div>

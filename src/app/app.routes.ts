@@ -8,6 +8,7 @@ import { TeacherDashboard } from './pages/teacher-dashboard/teacher-dashboard';
 import { AuthGuard } from './guard/auth.guard';
 
 export const routes: Routes = [
+    // { path: '', redirectTo: 'login', pathMatch: 'full' },
     {
         path: "",
         component: Home
@@ -23,14 +24,19 @@ export const routes: Routes = [
     {
         path: "student",
         component: StudentDashboard,
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard],
+        data: { requiredRole: 'Student'} // <-- Tell the guard who is allowed!
     },
     {
         path: "teacher",
-        component: TeacherDashboard
+        component: TeacherDashboard,
+        canActivate: [AuthGuard],
+        data: { requiredRole: 'Teacher' } // <-- Tell the guard who is allowed!
     },
     {
         path: "admin",
-        component: AdminDashboard
+        component: AdminDashboard,
+        canActivate: [AuthGuard],
+        data: { requiredRole: 'Admin' }
     }
 ];
