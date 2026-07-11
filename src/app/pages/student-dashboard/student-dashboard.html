@@ -1,77 +1,88 @@
 <!-- <p>student-dashboard works!</p> -->
 
-<!-- without style -->
-
 <!-- <div>
-  <h1>Student Dashboard</h1>
+  <header>
+    <div>
+      <h1>Student Dashboard</h1>
+      <p>Generate and manage your secure event access tokens.</p>
+    </div>
+    <button (click)="onLogout()">Sign Out</button>
+  </header>
 
   <div>
-    <h2>Generate Token</h2>
+    
+    <div>
+      <h2>Generate Token</h2>
 
-    <form [formGroup]="tokenForm" (ngSubmit)="onGenerateToken()">
-      
-      <div>
-        <label>Select Event</label>
-        <select formControlName="eventId">
-          <option value="" disabled selected>-- Choose an Event --</option>
+      <form [formGroup]="tokenForm" (ngSubmit)="onGenerateToken()">
+        
+        <div>
+          <label>Select Event</label>
+          <select formControlName="eventId">
+            <option value="" disabled selected>-- Choose an Event --</option>
+            
+            @for (event of availableEvents; track event.id) {
+              <option [value]="event.id">{{ event.name }}</option>
+            }
+          </select>
           
-          @for (event of availableEvents; track event.id) {
-            <option [value]="event.id">{{ event.name }}</option>
+          @if (inValid('eventId')) {
+            <div>Please select an event.</div>
           }
-        </select>
-        
-        @if (inValid('eventId')) {
-          <div>Please select an event.</div>
-        }
-      </div>
+        </div>
 
-      <div>
-        <label>Valid For (Days)</label>
-        <input type="number" formControlName="validityDays">
-        
-        @if (inValid('validityDays')) {
-          <div>Must be between 1 and 30 days.</div>
-        }
-      </div>
+        <div>
+          <label>Valid For (Days)</label>
+          <input type="number" formControlName="validityDays">
+          
+          @if (inValid('validityDays')) {
+            <div>Must be between 1 and 30 days.</div>
+          }
+        </div>
 
-      @if (errorMessage) { <div>{{ errorMessage }}</div> }
-      @if (successMessage) { <div>{{ successMessage }}</div> }
+        @if (errorMessage) { <div>{{ errorMessage }}</div> }
+        @if (successMessage) { <div>{{ successMessage }}</div> }
 
-      <button type="submit">Generate Token</button>
-    </form>
-  </div>
+        <button type="submit">Generate Token</button>
+      </form>
+    </div>
 
-  <div>
-    <h2>My Generated Tokens</h2>
+    <div>
+      <h2>My Generated Tokens</h2>
 
-    @if (myTokens.length === 0) {
-      <p>You haven't generated any tokens yet.</p>
-    } @else {
-      <table>
-        <thead>
-          <tr>
-            <th>Secure Code</th>
-            <th>Event ID</th>
-            <th>Created</th>
-            <th>Expires</th>
-            <th>Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (token of myTokens; track token.id) {
+      @if (myTokens.length === 0) {
+        <div>
+          <p>You haven't generated any tokens yet.</p>
+          <p>Use the form on the left to create your first one.</p>
+        </div>
+      } @else {
+        <table>
+          <thead>
             <tr>
-              <td>{{ token.tokenString }}</td>
-              <td>{{ token.eventId }}</td>
-              
-              <td>{{ token.createdAt | date:'mediumDate' }}</td>
-              <td>{{ token.expiresAt | date:'mediumDate' }}</td>
-              
-              <td>{{ token.status }}</td>
+              <th>Secure Code</th>
+              <th>Event ID</th>
+              <th>Created</th>
+              <th>Expires</th>
+              <th>Status</th>
             </tr>
-          }
-        </tbody>
-      </table>
-    }
+          </thead>
+          <tbody>
+            
+            @for (token of myTokens; track token.id) {
+              <tr>
+                <td>{{ token.tokenString }}</td>
+                <td>{{ token.eventId }}</td>
+                <td>{{ token.createdAt | date:'mediumDate' }}</td>
+                <td>{{ token.expiresAt | date:'mediumDate' }}</td>
+                <td>{{ token.status }}</td>
+              </tr>
+            }
+            
+          </tbody>
+        </table>
+      }
+    </div>
+
   </div>
 </div> -->
 
@@ -80,9 +91,21 @@
 <div class="min-h-screen bg-gray-50 p-8">
   <div class="max-w-6xl mx-auto">
     
-    <header class="mb-8">
-      <h1 class="text-3xl font-extrabold text-gray-900">Student Dashboard</h1>
-      <p class="text-gray-600 mt-2">Generate and manage your secure event access tokens.</p>
+    <header class="mb-8 flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200">
+      <div>
+        <h1 class="text-3xl font-extrabold text-gray-900">Student Dashboard</h1>
+        <p class="text-gray-600 mt-2">Generate and manage your secure event access tokens.</p>
+      </div>
+      
+      <button 
+        (click)="onLogout()"
+        class="flex items-center gap-2 bg-red-50 hover:bg-red-100 text-red-600 font-semibold py-2 px-4 rounded-lg transition-colors border border-red-200"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        Sign Out
+      </button>
     </header>
 
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">

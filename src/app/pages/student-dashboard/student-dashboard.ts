@@ -106,5 +106,11 @@ export class StudentDashboard {
       this.myTokens = this.db.tokens.filter(t => t.userId === this.db.currentUser?.id);
     }
   }
+
+  // 3. Add this function at the very bottom of your class
+  onLogout() {
+    this.db.currentUser = null; // Clears the session!
+    this.router.navigate(['/login']); // Sends them back to the login page
+  }
 }
 
