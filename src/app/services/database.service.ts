@@ -34,14 +34,20 @@ export class DatabaseService {
         {
             id: 'evt_1', 
             name: 'Cybersecurity CTF Championship', 
-            date: '2026-08-15', 
-            description: 'Annual Capture The Flag event.'
+            // Wrap the string in new Date()
+            date: new Date('2026-08-15'), 
+            // Changed description to location
+            location: 'Main Security Lab',
+            // description: 'Annual Capture The Flag event.'
         },
         {
             id: 'evt_3', 
             name: 'Hackathon: AI Solutions', 
-            date: '2026-10-05', 
-            description: '48-hour coding challenge.' 
+            // Wrap the string in new Date()
+            date: new Date('2026-10-05'), 
+            // Changed description to location
+            location: 'Innovation Auditorium',
+            // description: '48-hour coding challenge.' 
         }
     ];
 

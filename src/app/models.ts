@@ -11,8 +11,9 @@ export interface User{
 export interface Event{
     id: string;
     name: string;
-    date: string;
-    description: string;
+    date: Date;
+    location: string;
+    // description: string;
 }
 
 export interface Token{
