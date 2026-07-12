@@ -108,7 +108,8 @@ export class Signup {
       name: formValues.name,
       email: formValues.email,
       password: formValues.password,
-      role: 'Pending'
+      role: 'Pending',
+      status: 'Pending' // <-- ADD THIS LINE!
 
     }
 

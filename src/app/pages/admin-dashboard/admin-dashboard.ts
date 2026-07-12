@@ -3,7 +3,7 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
-import { Event, Token } from '../../models';
+import { Event, Role, Token, User } from '../../models';
 
 @Component({
   selector: 'app-admin-dashboard',
@@ -20,6 +20,8 @@ export class AdminDashboard implements OnInit {
   // 1. God-Mode State Variables
   allEvents: Event[] = [];
   allTokens: Token[] = [];
+  pendingUsers: User[] = []; // <-- NEW: The Approval Queue
+
   successMessage: string = '';
   showClearConfirm: boolean = false;
 
@@ -73,6 +75,20 @@ export class AdminDashboard implements OnInit {
     this.refreshData();
   }
 
+  // --- USER APPROVAL ENGINE ---
+  onApproveUser(user: User, assignedRole: string) {
+    user.role = assignedRole as Role;
+    user.status = 'Approved';
+    this.successMessage = `Approved ${user.name} as a ${assignedRole}.`;
+    this.refreshData();
+  }
+
+  onRejectUser(user: User) {
+    user.status = 'Rejected';
+    this.successMessage = `Rejected account request for ${user.name}.`;
+    this.refreshData();
+  }
+
   // 5. Form Validation Helper
   inValid(field: string): boolean {
     const ctr = this.eventForm.get(field);
@@ -97,6 +113,8 @@ export class AdminDashboard implements OnInit {
   private refreshData() {
     this.allEvents = this.db.events;
     this.allTokens = this.db.tokens; 
+    // Filter the database to ONLY show users who are 'Pending'
+    this.pendingUsers = this.db.users.filter(u => u.status === 'Pending');
   }
 
   // 8. Eject Button
@@ -106,4 +124,5 @@ export class AdminDashboard implements OnInit {
   }
 
 }
+
 

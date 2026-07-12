@@ -1,11 +1,15 @@
 export type Role = 'Student' | 'Teacher' | 'Admin' | 'Pending';
 
+// NEW: Add a strict status type
+export type UserStatus = 'Pending' | 'Approved' | 'Rejected';
+
 export interface User{
     id: string;
     name: string;
     email: string;
     password: string;
     role: Role;
+    status: UserStatus; // <-- ADD THIS LINE
 }
 
 export interface Event{

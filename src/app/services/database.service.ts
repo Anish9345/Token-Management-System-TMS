@@ -12,21 +12,33 @@ export class DatabaseService {
         name: 'Admin User', 
         email: 'admin@tms.com', 
         password: 'password123', 
-        role: 'Admin' 
+        role: 'Admin' ,
+        status: 'Approved' // <-- Add status
         },
         { 
         id: 'u2', 
         name: 'Test Teacher', 
         email: 'teacher@tms.com', 
         password: 'password123', 
-        role: 'Teacher' 
+        role: 'Teacher',
+        status: 'Approved' // <-- Add status 
         },
         { 
         id: 'u3', 
         name: 'Test Student', 
         email: 'student@tms.com', 
         password: 'password123', 
-        role: 'Student' 
+        role: 'Student',
+        status: 'Approved' // <-- Add status 
+        },
+        // NEW: A dummy user waiting for Admin approval!
+        {
+        id: 'u4',
+        name: 'New Guy',
+        email: 'newguy@tms.com',
+        password: 'password123',
+        role: 'Pending', 
+        status: 'Pending'
         }
     ];
 
