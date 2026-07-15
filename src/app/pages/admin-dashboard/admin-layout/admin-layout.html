@@ -1,0 +1,120 @@
+<!-- <p>admin-layout works!</p> -->
+
+<!-- without style -->
+
+<!-- <div>
+  
+  <aside>
+    <div>
+      <h1>TMS Admin</h1>
+      <p>Control Center</p>
+    </div>
+
+    <nav>
+      <a routerLink="overview" routerLinkActive="active-tab">Dashboard</a>
+      <a routerLink="events" routerLinkActive="active-tab">Manage Events</a>
+      <a routerLink="users" routerLinkActive="active-tab">User Accounts</a>
+      <a routerLink="tokens" routerLinkActive="active-tab">Token Audit Log</a>
+    </nav>
+
+    <div>
+      <button (click)="onLogout()">Sign Out</button>
+    </div>
+  </aside>
+
+  <main>
+    
+    <header>
+      <h2>System Administration</h2>
+    </header>
+
+    <section>
+      <router-outlet></router-outlet>
+    </section>
+    
+  </main>
+</div> -->
+
+<!-- with style -->
+
+<div class="flex h-screen bg-gray-50 overflow-hidden font-sans">
+  
+  <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col h-full shadow-2xl z-20">
+    
+    <div class="p-6 border-b border-slate-700 bg-slate-950 flex items-center gap-3">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M2.166 4.999A11.954 11.954 0 0010 1.944 11.954 11.954 0 0017.834 5c.11.65.166 1.32.166 2.001 0 5.225-3.34 9.67-8 11.317C5.34 16.67 2 12.225 2 7c0-.682.057-1.35.166-2.001zm11.541 3.708a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+      </svg>
+      <div>
+        <h1 class="text-xl font-bold text-white tracking-wide">TMS Admin</h1>
+        <p class="text-[10px] uppercase tracking-widest text-slate-500 font-bold">Control Center</p>
+      </div>
+    </div>
+
+    <nav class="flex-1 px-3 py-6 space-y-2 overflow-y-auto">
+      
+      <a 
+        routerLink="overview" 
+        routerLinkActive="bg-blue-600 text-white shadow-md border-l-4 border-blue-300" 
+        class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition-all font-medium border-l-4 border-transparent text-sm">
+        <span class="text-lg">📊</span> Dashboard Overview
+      </a>
+
+      <a 
+        routerLink="events" 
+        routerLinkActive="bg-blue-600 text-white shadow-md border-l-4 border-blue-300" 
+        class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition-all font-medium border-l-4 border-transparent text-sm">
+        <span class="text-lg">📅</span> Manage Events
+      </a>
+
+      <a 
+        routerLink="users" 
+        routerLinkActive="bg-blue-600 text-white shadow-md border-l-4 border-blue-300" 
+        class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition-all font-medium border-l-4 border-transparent text-sm">
+        <span class="text-lg">👥</span> User Accounts
+      </a>
+
+      <a 
+        routerLink="tokens" 
+        routerLinkActive="bg-blue-600 text-white shadow-md border-l-4 border-blue-300" 
+        class="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition-all font-medium border-l-4 border-transparent text-sm">
+        <span class="text-lg">🎫</span> Token Audit Log
+      </a>
+      
+    </nav>
+
+    <div class="p-4 border-t border-slate-700 bg-slate-950">
+      <button 
+        (click)="onLogout()" 
+        class="w-full flex items-center justify-center gap-2 bg-red-500/10 hover:bg-red-500 text-red-500 hover:text-white font-semibold py-2.5 px-4 rounded-lg transition-all border border-red-500/20 hover:border-red-500 text-sm">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+        </svg>
+        Secure Sign Out
+      </button>
+    </div>
+  </aside>
+
+  <main class="flex-1 flex flex-col h-full overflow-hidden relative">
+    
+    <header class="h-16 bg-white border-b border-gray-200 shadow-sm flex items-center px-8 justify-between z-10 shrink-0">
+      <div class="flex items-center gap-2 text-gray-500">
+        <span class="text-sm font-semibold">System Administration Pipeline</span>
+      </div>
+      
+      <div class="flex items-center gap-3">
+        <div class="h-8 w-8 rounded-full bg-slate-200 flex items-center justify-center text-slate-600 font-bold text-sm border border-slate-300">
+          A
+        </div>
+        <span class="text-sm font-bold text-gray-700">Admin Active</span>
+      </div>
+    </header>
+
+    <div class="flex-1 overflow-y-auto p-8 bg-gray-50">
+      <div class="max-w-6xl mx-auto pb-12">
+        <router-outlet></router-outlet>
+      </div>
+    </div>
+    
+  </main>
+</div>
