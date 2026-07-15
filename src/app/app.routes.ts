@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 import { Login } from './pages/login/login';
 import { Signup } from './pages/signup/signup';
 import { StudentDashboard } from './pages/student-dashboard/student-dashboard';
-import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
+// import { AdminDashboard } from './pages/admin-dashboard/admin-dashboard';
 import { Home } from './pages/home/home';
 import { TeacherDashboard } from './pages/teacher-dashboard/teacher-dashboard';
 import { AuthGuard } from './guard/auth.guard';
@@ -10,6 +10,7 @@ import { AdminOverview } from './pages/admin-dashboard/admin-overview/admin-over
 import { AdminEvents } from './pages/admin-dashboard/admin-events/admin-events';
 import { AdminUsers } from './pages/admin-dashboard/admin-users/admin-users';
 import { AdminTokens } from './pages/admin-dashboard/admin-tokens/admin-tokens';
+import { AdminLayout } from './pages/admin-dashboard/admin-layout/admin-layout';
 
 export const routes: Routes = [
     // { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -37,9 +38,15 @@ export const routes: Routes = [
         canActivate: [AuthGuard],
         data: { requiredRole: 'Teacher' } // <-- Tell the guard who is allowed!
     },
+    // {
+    //     path: "admin",
+    //     component: AdminDashboard,
+    //     canActivate: [AuthGuard],
+    //     data: { requiredRole: 'Admin' },
+    // },
     {
         path: "admin",
-        component: AdminDashboard,
+        component: AdminLayout,
         canActivate: [AuthGuard],
         data: { requiredRole: 'Admin' },
         children: [

@@ -1,1 +1,171 @@
 <p>admin-overview works!</p>
+
+<!-- without style -->
+
+<!-- <div>
+  <header>
+    <h2>Event Management</h2>
+    <p>Create, update, and permanently delete system events.</p>
+  </header>
+
+  @if (successMessage) {
+    <div>
+      <strong>Success:</strong> {{ successMessage }}
+    </div>
+  }
+
+  <main>
+    
+    <section>
+      <h3>{{ isEditing ? 'Edit Existing Event' : 'Create New Event' }}</h3>
+      
+      <form [formGroup]="eventForm" (ngSubmit)="onSubmitEvent()">
+        <div>
+          <label>Event Name:</label>
+          <input type="text" formControlName="name">
+        </div>
+        
+        <div>
+          <label>Event Date:</label>
+          <input type="date" formControlName="date">
+        </div>
+        
+        <div>
+          <label>Location / Room:</label>
+          <input type="text" formControlName="location">
+        </div>
+
+        <button type="submit">
+          {{ isEditing ? 'Save Changes' : 'Add Event' }}
+        </button>
+
+        @if (isEditing) {
+          <button type="button" (click)="onCancelEdit()">Cancel</button>
+        }
+      </form>
+    </section>
+
+    <hr>
+
+    <section>
+      <h3>Active Events Database</h3>
+      
+      @if (allEvents.length === 0) {
+        <p>No events have been created yet.</p>
+      } @else {
+        <table>
+          <thead>
+            <tr>
+              <th>Event ID</th>
+              <th>Name</th>
+              <th>Date</th>
+              <th>Location</th>
+              <th>Admin Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (event of allEvents; track event.id) {
+              <tr>
+                <td>{{ event.id }}</td>
+                <td>{{ event.name }}</td>
+                <td>{{ event.date | date:'mediumDate' }}</td>
+                <td>{{ event.location }}</td>
+                <td>
+                  <button (click)="onEditEvent(event)">Edit</button>
+                  <button (click)="onDeleteEvent(event)">Delete</button>
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      }
+    </section>
+
+  </main>
+</div> -->
+
+<!-- with style -->
+
+<div class="space-y-8 animate-fade-in">
+  
+  <div>
+    <h2 class="text-2xl font-extrabold text-gray-800">Welcome back, Admin</h2>
+    <p class="text-sm text-gray-500 mt-1 font-medium">Here is the current status of your Token Management System.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4 hover:shadow-md transition-shadow">
+      <div class="h-12 w-12 bg-blue-100 text-blue-600 rounded-lg flex items-center justify-center text-2xl">
+        👥
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Total Users</p>
+        <h3 class="text-2xl font-extrabold text-gray-800">{{ totalUsers }}</h3>
+      </div>
+    </div>
+
+    <div 
+      class="bg-white p-6 rounded-xl shadow-sm border flex items-center gap-4 transition-all"
+      [class.border-red-300]="pendingApprovals > 0"
+      [class.border-gray-200]="pendingApprovals === 0"
+    >
+      <div 
+        class="h-12 w-12 rounded-lg flex items-center justify-center text-2xl"
+        [class.bg-red-100]="pendingApprovals > 0"
+        [class.text-red-600]="pendingApprovals > 0"
+        [class.animate-pulse]="pendingApprovals > 0"
+        [class.bg-gray-100]="pendingApprovals === 0"
+        [class.text-gray-500]="pendingApprovals === 0"
+      >
+        ⚠️
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Pending Approvals</p>
+        <h3 class="text-2xl font-extrabold" [class.text-red-600]="pendingApprovals > 0" [class.text-gray-800]="pendingApprovals === 0">
+          {{ pendingApprovals }}
+        </h3>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4 hover:shadow-md transition-shadow">
+      <div class="h-12 w-12 bg-purple-100 text-purple-600 rounded-lg flex items-center justify-center text-2xl">
+        📅
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Active Events</p>
+        <h3 class="text-2xl font-extrabold text-gray-800">{{ totalEvents }}</h3>
+      </div>
+    </div>
+
+    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 flex items-center gap-4 hover:shadow-md transition-shadow">
+      <div class="h-12 w-12 bg-green-100 text-green-600 rounded-lg flex items-center justify-center text-2xl">
+        🎫
+      </div>
+      <div>
+        <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Active Tokens</p>
+        <h3 class="text-2xl font-extrabold text-gray-800">{{ activeTokens }} <span class="text-sm font-medium text-gray-400">/ {{ totalTokens }}</span></h3>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="bg-slate-800 rounded-xl p-8 text-white shadow-lg border border-slate-700 flex flex-col md:flex-row items-center justify-between gap-6">
+    <div class="max-w-xl">
+      <h3 class="text-xl font-bold flex items-center gap-2">
+        <span class="h-3 w-3 rounded-full bg-green-400 animate-pulse"></span>
+        System Status: Online
+      </h3>
+      <p class="text-slate-400 mt-2 text-sm leading-relaxed">
+        The Token Management System is operating normally. All security pipelines are active. Use the sidebar navigation to manage users, create events, and audit the global token database.
+      </p>
+    </div>
+    
+    <div class="shrink-0 opacity-80">
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-slate-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+      </svg>
+    </div>
+  </div>
+
+</div>
