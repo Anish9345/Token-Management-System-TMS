@@ -1,1 +1,168 @@
-<p>admin-tokens works!</p>
+<!-- <p>admin-tokens works!</p> -->
+
+<!-- without style -->
+
+<!-- <div>
+  <header>
+    <h2>Token Audit Log</h2>
+  </header>
+
+  @if (successMessage) {
+    <div>{{ successMessage }}</div>
+  }
+
+  <section>
+    <div>
+      <h3>Generated Tokens ({{ allTokens.length }})</h3>
+      
+      <div>
+        <button (click)="onExportCSV()">Export Data to CSV</button>
+        <button (click)="onDeleteAllTokens()">Delete All Logs</button>
+      </div>
+
+    </div>
+
+    @if (allTokens.length === 0) {
+      <p>No tokens generated yet.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>Token Code</th>
+            <th>User & Event</th>
+            <th>Timestamps</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (token of allTokens; track token.id) {
+            <tr>
+              <td>{{ token.tokenString }}</td>
+              <td>
+                User: {{ token.userId }}<br>
+                Event: {{ token.eventId }}
+              </td>
+              <td>
+                Created: {{ token.createdAt | date:'short' }}<br>
+                Expires: {{ token.expiresAt | date:'short' }}
+              </td>
+              <td>{{ token.status }}</td>
+              <td>
+                @if (token.status === 'Active') {
+                  <button (click)="onRevokeToken(token)">Revoke</button>
+                } @else {
+                  <span>N/A</span>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+</div> -->
+
+<!-- With Style -->
+
+<div class="space-y-8 animate-fade-in">
+  <div>
+    <h2 class="text-2xl font-extrabold text-gray-800">Token Audit Log</h2>
+    <p class="text-sm text-gray-500 mt-1 font-medium">Monitor, audit, and revoke system-generated access tokens.</p>
+  </div>
+
+  @if (successMessage) {
+    <div class="bg-blue-50 border border-blue-200 text-blue-800 px-4 py-3 rounded-lg shadow-sm font-medium flex items-center gap-2">
+      <span>ℹ️</span> {{ successMessage }}
+    </div>
+  }
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    
+    <div class="bg-slate-50 border-b border-gray-200 p-4 flex items-center justify-between">
+      <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+        <span class="bg-slate-200 text-slate-700 px-2 py-0.5 rounded-full text-sm">{{ allTokens.length }}</span>
+        Generated Tokens
+      </h3>
+      
+      <div class="flex items-center gap-3">
+        <button (click)="onExportCSV()" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-900 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+          </svg>
+          Export to CSV
+        </button>
+
+        <button (click)="onDeleteAllTokens()" class="flex items-center gap-2 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-bold transition-colors shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+          Delete All Logs
+        </button>
+      </div>
+    </div>
+
+    @if (allTokens.length === 0) {
+      <div class="text-center py-16 bg-white">
+        <span class="text-4xl block mb-3">🎫</span>
+        <p class="text-gray-500 font-medium">The token database is currently empty.</p>
+      </div>
+    } @else {
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse bg-white">
+          <thead>
+            <tr class="text-slate-500 text-xs uppercase tracking-wider border-b border-gray-200">
+              <th class="p-4 font-semibold">Secure Code</th>
+              <th class="p-4 font-semibold">Generation Data</th>
+              <th class="p-4 font-semibold">Timestamps</th>
+              <th class="p-4 font-semibold">Status</th>
+              <th class="p-4 font-semibold text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            @for (token of allTokens; track token.id) {
+              <tr class="hover:bg-slate-50 transition-colors">
+                
+                <td class="p-4">
+                  <div class="font-mono font-bold text-slate-800 text-sm tracking-wide">{{ token.tokenString }}</div>
+                </td>
+                
+                <td class="p-4">
+                  <div class="text-xs text-gray-500"><span class="font-semibold">User:</span> {{ token.userId }}</div>
+                  <div class="text-xs text-gray-500 mt-0.5"><span class="font-semibold">Event:</span> {{ token.eventId }}</div>
+                </td>
+                
+                <td class="p-4 text-xs text-gray-500">
+                  <div><span class="font-semibold">Gen:</span> {{ token.createdAt | date:'short' }}</div>
+                  <div class="mt-0.5"><span class="font-semibold">Exp:</span> {{ token.expiresAt | date:'short' }}</div>
+                </td>
+                
+                <td class="p-4">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-bold tracking-wide uppercase"
+                    [ngClass]="{
+                      'bg-green-100 text-green-800': token.status === 'Active',
+                      'bg-slate-100 text-slate-600': token.status === 'Used',
+                      'bg-red-100 text-red-800': token.status === 'Expired'
+                    }">
+                    {{ token.status }}
+                  </span>
+                </td>
+                
+                <td class="p-4 text-right">
+                  @if (token.status === 'Active') {
+                    <button (click)="onRevokeToken(token)" class="bg-white border border-red-200 text-red-600 hover:bg-red-50 px-3 py-1.5 rounded-md text-xs font-bold transition-colors">
+                      Revoke Access
+                    </button>
+                  } @else {
+                    <span class="text-xs text-gray-400 font-medium italic">Action Unavailable</span>
+                  }
+                </td>
+
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+</div>
