@@ -1,1 +1,147 @@
-<p>home works!</p>
+<!-- <p>home works!</p> -->
+
+<!-- Without Style -->
+
+<!--  -->
+
+<!-- <div>
+  <nav>
+    <h2>TMS Core</h2>
+    <div>
+      <a routerLink="/login">Sign In</a>
+      <a routerLink="/signup">Create Account</a>
+    </div>
+  </nav>
+
+  <hr>
+
+  <main>
+    <h1>Secure Event Access. Zero Friction.</h1>
+    <p>A cryptographic token management architecture designed for seamless campus event coordination.</p>
+    
+    <div>
+      <a routerLink="/signup">Initialize Workspace</a>
+      <a routerLink="/login">Access Portal</a>
+    </div>
+  </main>
+
+  <hr>
+
+  <section>
+    <div>
+      <h3>Role-Based Security</h3>
+      <p>Strict route guarding ensures Students, Teachers, and Admins can only access their authorized pipelines.</p>
+    </div>
+    <div>
+      <h3>Dynamic Provisioning</h3>
+      <p>Generate single-use tokens instantly. Automatic expiration timelines prevent credential sharing or reuse.</p>
+    </div>
+    <div>
+      <h3>Global Audit Logs</h3>
+      <p>Track every token lifecycle from creation to revocation. Export system data seamlessly for compliance reporting.</p>
+    </div>
+  </section>
+
+  <hr>
+
+  <footer>
+    <p>&copy; 2026 Token Management System. All systems operational.</p>
+  </footer>
+</div> -->
+
+<!--  -->
+
+<!-- With Style -->
+
+<div class="min-h-screen bg-slate-50 font-sans flex flex-col">
+  
+  <nav class="bg-white border-b border-gray-200 px-8 py-4 flex items-center justify-between sticky top-0 z-50">
+    <div class="flex items-center gap-3">
+      <div class="bg-blue-600 text-white p-2 rounded-lg">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
+        </svg>
+      </div>
+      <span class="text-xl font-extrabold text-slate-800 tracking-tight">TMS Core</span>
+    </div>
+    
+    <div class="flex items-center gap-4">
+      <a routerLink="/login" class="text-sm font-bold text-slate-600 hover:text-blue-600 transition-colors">Sign In</a>
+      <a routerLink="/signup" class="text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg transition-colors shadow-sm">
+        Create Account
+      </a>
+    </div>
+  </nav>
+
+  <main class="flex-1 flex flex-col items-center justify-center text-center px-4 py-20 bg-gradient-to-b from-white to-slate-50">
+    
+    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-blue-50 border border-blue-200 text-blue-700 text-xs font-bold uppercase tracking-wider mb-8 animate-fade-in">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span>
+      </span>
+      System Version 2.0 Now Live
+    </div>
+
+    <h1 class="text-5xl md:text-6xl font-extrabold text-slate-900 tracking-tight max-w-4xl leading-tight mb-6">
+      Secure Event Access.<br>
+      <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-600">Zero Friction.</span>
+    </h1>
+    
+    <p class="text-lg text-slate-500 max-w-2xl mb-10 font-medium leading-relaxed">
+      A cryptographic token management architecture designed for seamless campus event coordination. Generate, distribute, and audit access with enterprise-grade precision.
+    </p>
+    
+    <div class="flex flex-col sm:flex-row gap-4 w-full justify-center max-w-md">
+      <a routerLink="/signup" class="bg-blue-600 hover:bg-blue-700 text-white text-base font-bold py-3.5 px-8 rounded-xl transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5 flex items-center justify-center gap-2 w-full">
+        Initialize Workspace
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+      </a>
+      <a routerLink="/login" class="bg-white border-2 border-slate-200 hover:border-slate-300 text-slate-700 text-base font-bold py-3.5 px-8 rounded-xl transition-all w-full flex items-center justify-center">
+        Access Portal
+      </a>
+    </div>
+  </main>
+
+  <section class="py-20 bg-white border-t border-gray-100">
+    <div class="max-w-6xl mx-auto px-8 grid grid-cols-1 md:grid-cols-3 gap-10">
+      
+      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+        <div class="w-12 h-12 bg-indigo-100 text-indigo-600 rounded-xl flex items-center justify-center mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Role-Based Security</h3>
+        <p class="text-sm text-slate-500 font-medium leading-relaxed">Strict route guarding ensures Students, Teachers, and Admins can only access their authorized pipelines.</p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+        <div class="w-12 h-12 bg-green-100 text-green-600 rounded-xl flex items-center justify-center mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Dynamic Provisioning</h3>
+        <p class="text-sm text-slate-500 font-medium leading-relaxed">Generate single-use tokens instantly. Automatic expiration timelines prevent credential sharing or reuse.</p>
+      </div>
+
+      <div class="p-6 rounded-2xl bg-slate-50 border border-slate-100">
+        <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center mb-6">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <h3 class="text-lg font-bold text-slate-800 mb-2">Global Audit Logs</h3>
+        <p class="text-sm text-slate-500 font-medium leading-relaxed">Track every token lifecycle from creation to revocation. Export system data seamlessly for compliance reporting.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="bg-slate-900 text-slate-400 py-8 text-center text-sm font-medium">
+    <p>&copy; 2026 Token Management System. All systems operational.</p>
+  </footer>
+</div>
