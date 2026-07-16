@@ -1,1 +1,235 @@
-<p>admin-users works!</p>
+<!-- <p>admin-users works!</p> -->
+
+<!-- without style -->
+
+<!-- <div>
+  <header>
+    <h2>User Accounts</h2>
+  </header>
+
+  @if (successMessage) {
+    <div>{{ successMessage }}</div>
+  }
+
+  <section>
+    <h3>Pending Approvals ({{ pendingUsers.length }})</h3>
+    
+    @if (pendingUsers.length === 0) {
+      <p>No pending users.</p>
+    } @else {
+      <table>
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of pendingUsers; track user.id) {
+            <tr>
+              <td>{{ user.name }} ({{ user.email }})</td>
+              <td>
+                <select #pendingRole>
+                  <option value="Student">Student</option>
+                  <option value="Teacher">Teacher</option>
+                  <option value="Admin">Admin</option>
+                </select>
+              </td>
+              <td>
+                @if (pendingApprovalAdminTargetId !== user.id) {
+                  <button (click)="onApproveUser(user, pendingRole.value)">Approve</button>
+                  <button (click)="onRejectUser(user)">Reject</button>
+                } @else {
+                  <div>
+                    <strong>⚠️ Approve as Admin?</strong>
+                    <button (click)="confirmApprovalAdminGrant(user)">Yes</button>
+                    <button (click)="cancelApprovalAdminGrant()">Cancel</button>
+                  </div>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  </section>
+
+  <hr>
+
+  <section>
+    <h3>Active User Directory</h3>
+    
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Current Role</th>
+          <th>Update Role</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (user of activeUsers; track user.id) {
+          <tr>
+            <td>{{ user.name }}</td>
+            <td>{{ user.role }}</td>
+            <td>
+              
+              @if (pendingAdminTargetId !== user.id) {
+                <select #activeRole [value]="user.role">
+                  <option value="Student">Student</option>
+                  <option value="Teacher">Teacher</option>
+                  <option value="Admin">Admin</option>
+                </select>
+                <button (click)="onChangeRoleRequest(user, activeRole.value)">Update</button>
+              } 
+              @else {
+                <div>
+                  <strong>⚠️ Make Admin?</strong>
+                  <button (click)="confirmAdminGrant(user)">Yes</button>
+                  <button (click)="cancelAdminGrant()">Cancel</button>
+                </div>
+              }
+
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </section>
+</div> -->
+
+<!-- With Style -->
+
+<div class="space-y-8 animate-fade-in">
+  <div>
+    <h2 class="text-2xl font-extrabold text-gray-800">User Accounts</h2>
+    <p class="text-sm text-gray-500 mt-1 font-medium">Manage approvals and adjust security roles for all system users.</p>
+  </div>
+
+  @if (successMessage) {
+    <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg shadow-sm font-medium flex items-center gap-2">
+      <span>✅</span> {{ successMessage }}
+    </div>
+  }
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="bg-slate-50 border-b border-gray-200 p-4 flex items-center justify-between">
+      <h3 class="text-lg font-bold text-gray-800 flex items-center gap-2">
+        <span class="bg-red-100 text-red-600 px-2 py-0.5 rounded-full text-sm">{{ pendingUsers.length }}</span>
+        Pending Approvals
+      </h3>
+    </div>
+
+    @if (pendingUsers.length === 0) {
+      <div class="p-8 text-center bg-white">
+        <p class="text-gray-500 font-medium">No pending users waiting for approval.</p>
+      </div>
+    } @else {
+      <div class="overflow-x-auto">
+        <table class="w-full text-left border-collapse bg-white">
+          <thead>
+            <tr class="text-slate-500 text-xs uppercase tracking-wider border-b border-gray-200">
+              <th class="p-4 font-semibold">User Details</th>
+              <th class="p-4 font-semibold">Assign Role</th>
+              <th class="p-4 font-semibold text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            @for (user of pendingUsers; track user.id) {
+              <tr class="hover:bg-slate-50 transition-colors">
+                <td class="p-4">
+                  <div class="font-bold text-gray-900">{{ user.name }}</div>
+                  <div class="text-xs text-gray-500 mt-0.5">{{ user.email }}</div>
+                </td>
+                <td class="p-4">
+                  <select #pendingRole class="border border-gray-300 rounded-md px-3 py-1.5 text-sm outline-none focus:border-blue-500 bg-white">
+                    <option value="Student">Student</option>
+                    <option value="Teacher">Teacher</option>
+                    <option value="Admin">Admin</option>
+                  </select>
+                </td>
+                
+                <td class="p-4 text-right space-x-2">
+                  @if (pendingApprovalAdminTargetId !== user.id) {
+                    <button (click)="onApproveUser(user, pendingRole.value)" class="bg-green-600 hover:bg-green-700 text-white px-4 py-1.5 rounded-md text-xs font-bold transition-colors shadow-sm">Approve</button>
+                    <button (click)="onRejectUser(user)" class="bg-white border border-red-200 text-red-600 hover:bg-red-50 px-4 py-1.5 rounded-md text-xs font-bold transition-colors">Reject</button>
+                  } @else {
+                    <div class="inline-flex items-center gap-2 bg-red-50 border border-red-200 p-1.5 rounded-md animate-pulse-slow">
+                      <span class="text-xs font-bold text-red-700 uppercase tracking-wide px-2">⚠️ Approve as Admin?</span>
+                      <button (click)="cancelApprovalAdminGrant()" class="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-3 py-1.5 rounded text-xs font-bold">Cancel</button>
+                      <button (click)="confirmApprovalAdminGrant(user)" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1.5 rounded text-xs font-bold">Confirm</button>
+                    </div>
+                  }
+                </td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    }
+  </div>
+
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <div class="p-6 border-b border-gray-200">
+      <h3 class="text-lg font-bold text-gray-800">Active User Directory</h3>
+      <p class="text-xs text-gray-500 mt-1">Update roles for active accounts in the system.</p>
+    </div>
+    
+    <div class="overflow-x-auto">
+      <table class="w-full text-left border-collapse">
+        <thead>
+          <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wider border-b border-gray-200">
+            <th class="p-4 font-semibold">User Details</th>
+            <th class="p-4 font-semibold">Current Role</th>
+            <th class="p-4 font-semibold">Update Role</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          @for (user of activeUsers; track user.id) {
+            <tr class="hover:bg-slate-50 transition-colors">
+              
+              <td class="p-4">
+                <div class="font-bold text-gray-900 text-sm">{{ user.name }}</div>
+                <div class="text-xs text-gray-500 mt-0.5">{{ user.email }}</div>
+              </td>
+              
+              <td class="p-4">
+                <span class="px-2.5 py-1 rounded-full text-xs font-bold border"
+                  [ngClass]="{
+                    'bg-blue-50 text-blue-700 border-blue-200': user.role === 'Student',
+                    'bg-purple-50 text-purple-700 border-purple-200': user.role === 'Teacher',
+                    'bg-slate-800 text-white border-slate-900': user.role === 'Admin'
+                  }">
+                  {{ user.role }}
+                </span>
+              </td>
+              
+              <td class="p-4">
+                @if (pendingAdminTargetId !== user.id) {
+                  <div class="flex gap-2">
+                    <select #activeRole [value]="user.role" class="border border-gray-300 rounded-md px-2 py-1.5 text-sm outline-none focus:border-blue-500 bg-white">
+                      <option value="Student">Student</option>
+                      <option value="Teacher">Teacher</option>
+                      <option value="Admin">Admin</option>
+                    </select>
+                    <button (click)="onChangeRoleRequest(user, activeRole.value)" class="bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 px-3 py-1.5 rounded-md text-xs font-bold transition-colors">
+                      Update
+                    </button>
+                  </div>
+                } @else {
+                  <div class="flex items-center gap-2 bg-red-50 border border-red-200 p-2 rounded-md animate-pulse-slow">
+                    <span class="text-xs font-bold text-red-700 uppercase tracking-wide px-2">⚠️ Grant Admin?</span>
+                    <button (click)="cancelAdminGrant()" class="bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 px-3 py-1 rounded text-xs font-bold">Cancel</button>
+                    <button (click)="confirmAdminGrant(user)" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs font-bold">Yes, Confirm</button>
+                  </div>
+                }
+              </td>
+
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
