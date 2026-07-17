@@ -55,26 +55,32 @@ export class Login {
 // 2. Extract both values
     const { email, password } = this.reactiveForm.value;
 
-// 3. Search the database for an exact match of BOTH email and password
-    const foundUser = this.db.users.find(u => u.email === email && u.password === password);
+// We call a new login function that we will build in your DatabaseService
+    this.db.loginUser(email, password).subscribe({
+      next: (response: any) => {
+        
+        // 1. Save the mathematically signed JWT to the browser's memory!
+        localStorage.setItem('tms_token', response.token); 
 
-    if(foundUser){
+        // 2. Save the user data to your service so the rest of the app knows who is logged in
+        this.db.currentUser = response.user;
 
-      // ADD THIS LINE: Save the session!
-      this.db.currentUser = foundUser;
-
-      if(foundUser.role === 'Admin'){
-        this.router.navigate(['/admin']);
-      }else if(foundUser.role == 'Teacher'){
-        this.router.navigate(['/teacher']);
-      }else if(foundUser.role === 'Student'){
-        this.router.navigate(['/student']);
-      }else{
-        this.errorMessage = 'Your account is pending approval.';
+        // 3. Route based on the verified role from the backend
+        if (response.user.role === 'Admin') {
+          this.router.navigate(['/admin']);
+        } else if (response.user.role === 'Teacher') {
+          this.router.navigate(['/teacher']);
+        } else if (response.user.role === 'Student') {
+          this.router.navigate(['/student']);
+        } else {
+          this.errorMessage = 'Your account is pending approval.';
+        }
+      },
+      error: (err) => {
+        // If the backend returns a 401 or 403, grab the exact message sent from Node.js
+        this.errorMessage = err.error?.message || 'Invalid Email or Password.';
       }
-    }else{
-      this.errorMessage = 'Invalid Email or Password.';
-    }
+    });
   }
   
 }
