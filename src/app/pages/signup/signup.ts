@@ -2,8 +2,8 @@ import { Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { DatabaseService } from '../../services/database.service';
-import { User } from '../../models';
-import { from } from 'rxjs';
+// import { User } from '../../models';
+// import { from } from 'rxjs';
 
 @Component({
   selector: 'app-signup',
@@ -40,7 +40,7 @@ export class Signup {
       "",
       [
         Validators.required,
-        Validators.maxLength(6)
+        Validators.minLength(6)  // Security fix: Swapped to minLength!
       ]
     ],
     confirmPassword: [
@@ -88,36 +88,59 @@ export class Signup {
       return;
     }
     
-    const formValues = this.reactiveForm.value;
+    // 2. Extract ONLY the fields the backend needs
+    const { name, email, password } = this.reactiveForm.value;
 
-    // 2. Check if the EMAIL is already taken (Synchronous for now)
-    const existingUser = this.db.users.find(u => u.email === formValues.email);
-
-    if(existingUser){
-      this.errorMessage = 'An account with this email already exists.'
-      return;
-    }
-
-    // 3. Auto-generate a secure internal ID (e.g., u8374)
-    const generatedId = 'u' + Math.floor(Math.random() * 10000);
-    // console.log(generatedId);
-
-    // Create new user
-    const newUser: User = {
-      id: generatedId,
-      name: formValues.name,
-      email: formValues.email,
-      password: formValues.password,
-      role: 'Pending',
-      status: 'Pending' // <-- ADD THIS LINE!
-
-    }
-
-    this.db.users.push(newUser);
-
-    this.successMessage = 'Signup successful! Please wait for an Admin to verify your account.';
-    this.reactiveForm.reset();
+    // 3. Send the data to MongoDB via the Node.js backend
+    this.db.signupUser({ name, email, password }).subscribe({
+      next: (response: any) => {
+        
+        // Show success message and clear the form
+        this.successMessage = response.message || 'Signup successful! Please wait for an Admin to verify your account.';
+        this.reactiveForm.reset();
+        
+        // Auto-redirect to login page after 3 seconds
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 3000);
+      },
+      error: (err) => {
+        // If Node.js throws an error (like Duplicate Email), display it here
+        this.errorMessage = err.error?.message || 'Server error during registration. Email might be taken.';
+      }
+    });
   }
+
+  //   const formValues = this.reactiveForm.value;
+
+  //   // 2. Check if the EMAIL is already taken (Synchronous for now)
+  //   const existingUser = this.db.users.find(u => u.email === formValues.email);
+
+  //   if(existingUser){
+  //     this.errorMessage = 'An account with this email already exists.'
+  //     return;
+  //   }
+
+  //   // 3. Auto-generate a secure internal ID (e.g., u8374)
+  //   const generatedId = 'u' + Math.floor(Math.random() * 10000);
+  //   // console.log(generatedId);
+
+  //   // Create new user
+  //   const newUser: User = {
+  //     id: generatedId,
+  //     name: formValues.name,
+  //     email: formValues.email,
+  //     password: formValues.password,
+  //     role: 'Pending',
+  //     status: 'Pending' // <-- ADD THIS LINE!
+
+  //   }
+
+  //   this.db.users.push(newUser);
+
+  //   this.successMessage = 'Signup successful! Please wait for an Admin to verify your account.';
+  //   this.reactiveForm.reset();
+  // }
 
 
 }
