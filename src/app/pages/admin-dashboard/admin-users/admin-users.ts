@@ -154,13 +154,18 @@ export class AdminUsers implements OnInit{
 //   }
 // }
 
-  private refreshData() {
-    // FETCH LIVE USERS FROM DB
-    this.db.getAllUsers().subscribe({
-      next: (usersFromDB) => {
-        this.pendingUsers = usersFromDB.filter(u => u.status === 'Pending');
-        this.activeUsers = usersFromDB.filter(u => u.status === 'Approved');
-      }
-    });
-  }
+private refreshData() {
+  console.log("Attempting to fetch users..."); // Step A: See if this even runs
+  this.db.getAllUsers().subscribe({
+    next: (usersFromDB) => {
+      console.log("Raw users from DB:", usersFromDB); // Step B: Look at this in your browser console!
+      
+      this.pendingUsers = usersFromDB.filter(u => u.status === 'Pending');
+      this.activeUsers = usersFromDB.filter(u => u.status === 'Approved');
+      
+      console.log("Pending Users found:", this.pendingUsers); // Step C: Are these empty?
+    },
+    error: (err) => console.error("Error fetching users:", err)
+  });
+}
 }
