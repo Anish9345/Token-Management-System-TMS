@@ -105,11 +105,14 @@ export class TeacherDashboard {
 
   // 4. The Action Button (Now updates MongoDB)
   markAsUsed() {
+    // 1. Check if token exists and has an ID
+    // We use 'this.searchedToken.id' directly because we are inside an if-check
     if (this.searchedToken && this.searchedToken.id) {
-      // Tell Node.js to update this specific token in the database
+      
+      // 2. Pass the ID, but provide a fallback string just in case
       this.db.markTokenAsUsed(this.searchedToken.id).subscribe({
         next: () => {
-          // Update the UI only after MongoDB confirms the save was successful
+          // 3. Update the UI
           if (this.searchedToken) {
             this.searchedToken.status = 'Used'; 
           }

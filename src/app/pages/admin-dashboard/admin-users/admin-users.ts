@@ -42,7 +42,7 @@ export class AdminUsers implements OnInit{
 
     // SECURITY CHECK: If approving directly as Admin, trigger Double-Tap
     if (role === 'Admin') {
-      this.pendingApprovalAdminTargetId = user.id!;
+      this.pendingApprovalAdminTargetId = user.id ?? '';
       return; // Stop and wait for confirmation!
     }
 
@@ -73,7 +73,7 @@ export class AdminUsers implements OnInit{
     if(!user.id) return;
     
     // API CALL TO UPDATE USER
-    this.db.updateUser(user.id, { role: assignedRole, status: 'Approved' }).subscribe({
+    this.db.updateUser(user.id ?? '', { role: assignedRole, status: 'Approved' }).subscribe({
       next: () => {
         this.successMessage = `Approved ${user.name} as a ${assignedRole}.`;
         this.refreshData();
@@ -91,7 +91,7 @@ export class AdminUsers implements OnInit{
     if(!user.id) return;
     
     // API CALL TO UPDATE USER
-    this.db.updateUser(user.id, { status: 'Rejected' }).subscribe({
+    this.db.updateUser(user.id ?? '', { status: 'Rejected' }).subscribe({
       next: () => {
         this.successMessage = `Rejected account request for ${user.name}.`;
         this.refreshData();
@@ -107,7 +107,7 @@ export class AdminUsers implements OnInit{
     const role = newRole as Role;
 
     if (role === 'Admin' && user.role !== 'Admin') {
-      this.pendingAdminTargetId = user.id!;
+      this.pendingAdminTargetId = user.id ?? '';
       this.pendingAdminRole = role;
       return; 
     }
@@ -137,7 +137,7 @@ export class AdminUsers implements OnInit{
     if(!user.id) return;
 
     // API CALL TO UPDATE ROLE
-    this.db.updateUser(user.id, { role: newRole }).subscribe({
+    this.db.updateUser(user.id ?? '', { role: newRole }).subscribe({
       next: () => {
         this.successMessage = `Successfully changed ${user.name}'s role to ${newRole}.`;
         this.refreshData();

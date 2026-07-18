@@ -96,7 +96,7 @@ export class AdminEvents implements OnInit {
   // 2. Trigger Edit Mode
   onEditEvent(event: Event) {
     this.isEditing = true;
-    this.editingEventId = event.id;
+    this.editingEventId = event.id ?? null;
     this.successMessage = '';
 
     // Date formatting trick: <input type="date"> strictly requires 'YYYY-MM-DD'
