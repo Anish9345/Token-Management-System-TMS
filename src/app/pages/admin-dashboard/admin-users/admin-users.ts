@@ -19,11 +19,15 @@ export class AdminUsers implements OnInit{
 
   // --- SECURITY STATE VARIABLES ---
   // Tracks active users being upgraded
+  // pendingAdminTargetId: string | null = null;
+  // pendingAdminRole: Role | null = null; 
+
   pendingAdminTargetId: string | null = null;
   pendingAdminRole: Role | null = null; 
-  
-  // Tracks pending users being approved directly as Admins
   pendingApprovalAdminTargetId: string | null = null;
+  
+  // // Tracks pending users being approved directly as Admins
+  // pendingApprovalAdminTargetId: string | null = null;
 
   ngOnInit() {
     this.refreshData();
@@ -38,7 +42,7 @@ export class AdminUsers implements OnInit{
 
     // SECURITY CHECK: If approving directly as Admin, trigger Double-Tap
     if (role === 'Admin') {
-      this.pendingApprovalAdminTargetId = user.id;
+      this.pendingApprovalAdminTargetId = user.id!;
       return; // Stop and wait for confirmation!
     }
 
@@ -57,18 +61,42 @@ export class AdminUsers implements OnInit{
     this.pendingApprovalAdminTargetId = null;
   }
 
-  // The Actual Database Update for Approvals
+  // // The Actual Database Update for Approvals
+  // private executeApproveUser(user: User, assignedRole: Role) {
+  //   user.role = assignedRole;
+  //   user.status = 'Approved';
+  //   this.successMessage = `Approved ${user.name} as a ${assignedRole}.`;
+  //   this.refreshData();
+  // }
+
   private executeApproveUser(user: User, assignedRole: Role) {
-    user.role = assignedRole;
-    user.status = 'Approved';
-    this.successMessage = `Approved ${user.name} as a ${assignedRole}.`;
-    this.refreshData();
+    if(!user.id) return;
+    
+    // API CALL TO UPDATE USER
+    this.db.updateUser(user.id, { role: assignedRole, status: 'Approved' }).subscribe({
+      next: () => {
+        this.successMessage = `Approved ${user.name} as a ${assignedRole}.`;
+        this.refreshData();
+      }
+    });
   }
 
+  // onRejectUser(user: User) {
+  //   user.status = 'Rejected';
+  //   this.successMessage = `Rejected account request for ${user.name}.`;
+  //   this.refreshData();
+  // }
+
   onRejectUser(user: User) {
-    user.status = 'Rejected';
-    this.successMessage = `Rejected account request for ${user.name}.`;
-    this.refreshData();
+    if(!user.id) return;
+    
+    // API CALL TO UPDATE USER
+    this.db.updateUser(user.id, { status: 'Rejected' }).subscribe({
+      next: () => {
+        this.successMessage = `Rejected account request for ${user.name}.`;
+        this.refreshData();
+      }
+    });
   }
 
   // ==========================================
@@ -79,7 +107,7 @@ export class AdminUsers implements OnInit{
     const role = newRole as Role;
 
     if (role === 'Admin' && user.role !== 'Admin') {
-      this.pendingAdminTargetId = user.id;
+      this.pendingAdminTargetId = user.id!;
       this.pendingAdminRole = role;
       return; 
     }
@@ -99,17 +127,40 @@ export class AdminUsers implements OnInit{
     this.pendingAdminRole = null;
   }
 
+  // private executeRoleChange(user: User, newRole: Role) {
+  //   user.role = newRole;
+  //   this.successMessage = `Successfully changed ${user.name}'s role to ${newRole}.`;
+  //   this.refreshData();
+  // }
+
   private executeRoleChange(user: User, newRole: Role) {
-    user.role = newRole;
-    this.successMessage = `Successfully changed ${user.name}'s role to ${newRole}.`;
-    this.refreshData();
+    if(!user.id) return;
+
+    // API CALL TO UPDATE ROLE
+    this.db.updateUser(user.id, { role: newRole }).subscribe({
+      next: () => {
+        this.successMessage = `Successfully changed ${user.name}'s role to ${newRole}.`;
+        this.refreshData();
+      }
+    });
   }
 
   // ==========================================
   // DATA SYNC
   // ==========================================
+//   private refreshData() {
+//     this.pendingUsers = this.db.users.filter(u => u.status === 'Pending');
+//     this.activeUsers = this.db.users.filter(u => u.status === 'Approved');
+//   }
+// }
+
   private refreshData() {
-    this.pendingUsers = this.db.users.filter(u => u.status === 'Pending');
-    this.activeUsers = this.db.users.filter(u => u.status === 'Approved');
+    // FETCH LIVE USERS FROM DB
+    this.db.getAllUsers().subscribe({
+      next: (usersFromDB) => {
+        this.pendingUsers = usersFromDB.filter(u => u.status === 'Pending');
+        this.activeUsers = usersFromDB.filter(u => u.status === 'Approved');
+      }
+    });
   }
 }

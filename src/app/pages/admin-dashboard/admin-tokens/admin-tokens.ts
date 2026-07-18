@@ -23,13 +23,27 @@ export class AdminTokens {
   // ==========================================
   // SINGLE TOKEN REVOCATION (The Sniper)
   // ==========================================
-  onRevokeToken(token: Token) {
+  // onRevokeToken(token: Token) {
+  //   const confirmRevoke = confirm(`⚠️ Are you sure you want to instantly revoke token: ${token.tokenString}?`);
+    
+  //   if (confirmRevoke) {
+  //     token.status = 'Expired';
+  //     this.successMessage = `Security Alert: Token ${token.tokenString} has been manually revoked.`;
+  //     this.refreshData();
+  //   }
+  // }
+
+    onRevokeToken(token: Token) {
     const confirmRevoke = confirm(`⚠️ Are you sure you want to instantly revoke token: ${token.tokenString}?`);
     
-    if (confirmRevoke) {
-      token.status = 'Expired';
-      this.successMessage = `Security Alert: Token ${token.tokenString} has been manually revoked.`;
-      this.refreshData();
+    if (confirmRevoke && token.id) {
+      // API CALL TO REVOKE
+      this.db.revokeToken(token.id).subscribe({
+        next: () => {
+          this.successMessage = `Security Alert: Token ${token.tokenString} has been manually revoked.`;
+          this.refreshData();
+        }
+      });
     }
   }
 
@@ -37,6 +51,7 @@ export class AdminTokens {
   // CSV EXPORT ENGINE (The Business Feature)
   // ==========================================
   onExportCSV() {
+    // (This remains entirely unchanged, as it uses the allTokens array fetched from the DB!)
     if (this.allTokens.length === 0) {
       alert('The database is empty. No data to export.');
       return;
@@ -48,8 +63,8 @@ export class AdminTokens {
       t.tokenString,
       t.userId,
       t.eventId,
-      t.createdAt.toISOString(),
-      t.expiresAt.toISOString(),
+      new Date(t.createdAt).toISOString(),
+      new Date(t.expiresAt).toISOString(),
       t.status
     ]);
 
@@ -84,14 +99,30 @@ export class AdminTokens {
 
     const confirmNuke = confirm('🚨 DANGER: Are you absolutely sure you want to permanently delete ALL tokens? Please ensure you have exported a CSV backup first. This action CANNOT be undone.');
     
-    if (confirmNuke) {
-      this.db.tokens = []; // Wipe the master database array completely
-      this.successMessage = 'System Alert: All token audit logs have been permanently deleted.';
-      this.refreshData();
+  //   if (confirmNuke) {
+  //     this.db.tokens = []; // Wipe the master database array completely
+  //     this.successMessage = 'System Alert: All token audit logs have been permanently deleted.';
+  //     this.refreshData();
+  //   }
+  // }
+
+  if (confirmNuke) {
+      // API CALL TO WIPE COLLECTION
+      this.db.deleteAllTokens().subscribe({
+        next: () => {
+          this.successMessage = 'System Alert: All token audit logs have been permanently deleted.';
+          this.refreshData();
+        }
+      });
     }
   }
 
-  private refreshData() {
-    this.allTokens = this.db.tokens;
+//   private refreshData() {
+//     this.allTokens = this.db.tokens;
+//   }
+// }
+
+private refreshData() {
+    this.db.getAllTokens().subscribe(tokens => this.allTokens = tokens);
   }
 }

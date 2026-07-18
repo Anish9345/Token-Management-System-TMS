@@ -12,8 +12,18 @@ export class AdminLayout {
   private db = inject(DatabaseService);
   private router = inject(Router);
 
+  // onLogout(){
+  //   this.db.currentUser = null;
+  //   this.router.navigate(['/login']);
+
   onLogout(){
+    // 1. Clear session
     this.db.currentUser = null;
+    
+    // 2. SECURE LOGOUT: Shred the admin JWT
+    localStorage.removeItem('tms_token'); 
+    
+    // 3. Redirect
     this.router.navigate(['/login']);
   }
 }

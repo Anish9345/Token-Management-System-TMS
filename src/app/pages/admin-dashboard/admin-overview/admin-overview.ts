@@ -22,17 +22,37 @@ export class AdminOverview implements OnInit{
     this.calculateStats();
   }
 
-  // The Math Engine
+//   // The Math Engine
+//   private calculateStats() {
+//     this.totalUsers = this.db.users.length;
+    
+//     // Count how many users are waiting at the door
+//     this.pendingApprovals = this.db.users.filter(u => u.status === 'Pending').length;
+    
+//     this.totalEvents = this.db.events.length;
+//     this.totalTokens = this.db.tokens.length;
+    
+//     // Count how many tokens are currently out there and valid
+//     this.activeTokens = this.db.tokens.filter(t => t.status === 'Active').length;
+//   }
+// }
+
   private calculateStats() {
-    this.totalUsers = this.db.users.length;
+    // 1. Fetch Users
+    this.db.getAllUsers().subscribe(users => {
+      this.totalUsers = users.length;
+      this.pendingApprovals = users.filter(u => u.status === 'Pending').length;
+    });
     
-    // Count how many users are waiting at the door
-    this.pendingApprovals = this.db.users.filter(u => u.status === 'Pending').length;
-    
-    this.totalEvents = this.db.events.length;
-    this.totalTokens = this.db.tokens.length;
-    
-    // Count how many tokens are currently out there and valid
-    this.activeTokens = this.db.tokens.filter(t => t.status === 'Active').length;
+    // 2. Fetch Events
+    this.db.getAllEvents().subscribe(events => {
+      this.totalEvents = events.length;
+    });
+
+    // 3. Fetch Tokens
+    this.db.getAllTokens().subscribe(tokens => {
+      this.totalTokens = tokens.length;
+      this.activeTokens = tokens.filter(t => t.status === 'Active').length;
+    });
   }
 }
