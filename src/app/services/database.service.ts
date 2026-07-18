@@ -54,27 +54,27 @@ export class DatabaseService {
     // We keep this to store the active session data!
   currentUser: User | null = null;
 
-    // We can keep the dummy events for now until we move them to MongoDB
-    events: Event[] = [
-        {
-            id: 'evt_1', 
-            name: 'Cybersecurity CTF Championship', 
-            // Wrap the string in new Date()
-            date: new Date('2026-08-15'), 
-            // Changed description to location
-            location: 'Main Security Lab',
-            // description: 'Annual Capture The Flag event.'
-        },
-        {
-            id: 'evt_3', 
-            name: 'Hackathon: AI Solutions', 
-            // Wrap the string in new Date()
-            date: new Date('2026-10-05'), 
-            // Changed description to location
-            location: 'Innovation Auditorium',
-            // description: '48-hour coding challenge.' 
-        }
-    ];
+    // // We can keep the dummy events for now until we move them to MongoDB
+    // events: Event[] = [
+    //     {
+    //         id: 'evt_1', 
+    //         name: 'Cybersecurity CTF Championship', 
+    //         // Wrap the string in new Date()
+    //         date: new Date('2026-08-15'), 
+    //         // Changed description to location
+    //         location: 'Main Security Lab',
+    //         // description: 'Annual Capture The Flag event.'
+    //     },
+    //     {
+    //         id: 'evt_3', 
+    //         name: 'Hackathon: AI Solutions', 
+    //         // Wrap the string in new Date()
+    //         date: new Date('2026-10-05'), 
+    //         // Changed description to location
+    //         location: 'Innovation Auditorium',
+    //         // description: '48-hour coding challenge.' 
+    //     }
+    // ];
 
     // --- LIVE DATABASE CONNECTIONS ---
 
@@ -95,9 +95,9 @@ export class DatabaseService {
 
   // TOKENS: Fetch a student's tokens from the Node.js backend
   getTokensFromDB(userId: string): Observable<Token[]> {
-    return this.http.get<Token[]>(`${this.apiUrl}/tokens/${userId}`);
+    return this.http.get<Token[]>(`${this.apiUrl}/tokens/user/${userId}`);
   }
-}
+
 
 // 2. An empty array to store the tokens as they are generated
 //   tokens: Token[] = [];
@@ -117,3 +117,65 @@ export class DatabaseService {
 //     return this.http.get<Token[]>(`${this.apiUrl}/tokens/${userId}`);
 //   }
 // }
+
+// ==========================================
+  // TEACHER ENDPOINTS
+  // ==========================================
+  
+  searchTokenByString(tokenString: string): Observable<Token> {
+    return this.http.get<Token>(`${this.apiUrl}/tokens/search/${tokenString}`);
+  }
+
+  markTokenAsUsed(tokenId: string): Observable<any> {
+    // We use PATCH to partially update the token's status
+    return this.http.patch<any>(`${this.apiUrl}/tokens/${tokenId}/use`, {});
+  }
+
+  // ==========================================
+  // ADMIN ENDPOINTS - USERS
+  // ==========================================
+  
+  getAllUsers(): Observable<User[]> {
+    return this.http.get<User[]>(`${this.apiUrl}/users`);
+  }
+
+  updateUser(userId: string, updateData: any): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/users/${userId}`, updateData);
+  }
+
+  // ==========================================
+  // ADMIN ENDPOINTS - EVENTS
+  // ==========================================
+  
+  getAllEvents(): Observable<Event[]> {
+    return this.http.get<Event[]>(`${this.apiUrl}/events`);
+  }
+
+  createEvent(eventData: any): Observable<Event> {
+    return this.http.post<Event>(`${this.apiUrl}/events`, eventData);
+  }
+
+  updateEvent(eventId: string, eventData: any): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/events/${eventId}`, eventData);
+  }
+
+  deleteEvent(eventId: string): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/events/${eventId}`);
+  }
+
+  // ==========================================
+  // ADMIN ENDPOINTS - TOKENS
+  // ==========================================
+  
+  getAllTokens(): Observable<Token[]> {
+    return this.http.get<Token[]>(`${this.apiUrl}/tokens`);
+  }
+
+  revokeToken(tokenId: string): Observable<any> {
+    return this.http.patch<any>(`${this.apiUrl}/tokens/${tokenId}/revoke`, {});
+  }
+
+  deleteAllTokens(): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/tokens`);
+  }
+}

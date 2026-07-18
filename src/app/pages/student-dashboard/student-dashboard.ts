@@ -42,11 +42,27 @@ export class StudentDashboard implements OnInit{
     ]
   });
 
-  ngOnInit(){
-    // We are still loading events from the local dummy data for now
-    this.availableEvents = this.db.events;
+  // ngOnInit(){
+  //   // We are still loading events from the local dummy data for now
+  //   this.availableEvents = this.db.events;
 
-    // Fetch the real tokens from MongoDB!
+  //   // Fetch the real tokens from MongoDB!
+  //   this.refreshMyTokens();
+  // }
+
+  ngOnInit(){
+    // 1. Fetch the live events from MongoDB via Node.js!
+    this.db.getAllEvents().subscribe({
+      next: (eventsFromDB: Event[]) => {
+        this.availableEvents = eventsFromDB;
+      },
+      error: (err) => {
+        this.errorMessage = 'Could not load events from the server.';
+        console.error(err);
+      }
+    });
+
+    // 2. Fetch the real tokens from MongoDB!
     this.refreshMyTokens();
   }
 
