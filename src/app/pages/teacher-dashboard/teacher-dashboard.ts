@@ -51,51 +51,97 @@ export class TeacherDashboard {
     // Grab what the teacher typed, trim spaces, and make it uppercase
     const codeToFind = this.searchForm.value.tokenCode.trim().toUpperCase();
     
-    // A. Does it exist?
-    const found = this.db.tokens.find(t => t.tokenString === codeToFind);
+    // // A. Does it exist?
+    // const found = this.db.tokens.find(t => t.tokenString === codeToFind);
 
-    if (!found) {
-      this.searchResult = 'invalid';
-      this.errorMessage = 'Token not found in the database. Please check the code.';
-      return;
-    }
+    // if (!found) {
+    //   this.searchResult = 'invalid';
+    //   this.errorMessage = 'Token not found in the database. Please check the code.';
+    //   return;
+    // }
 
-    this.searchedToken = found;
+    // this.searchedToken = found;
 
-    // B. Is it already used?
-    if (found.status === 'Used') {
-      this.searchResult = 'used';
-      this.errorMessage = 'Alert: This token has already been marked as Used.';
-      return;
-    }
-    // C. Is it expired?
-    const now = new Date();
-    if (now > found.expiresAt) {
-       this.searchResult = 'expired';
-       found.status = 'Expired'; // Auto-update the database!
-       this.errorMessage = 'This token has expired and is no longer valid.';
-       return;
-    }
+    // A. Fire off an HTTP GET request to Node.js to find the token
+    this.db.searchTokenByString(codeToFind).subscribe({
+      next: (tokenFromDB: Token) => {
+        this.searchedToken = tokenFromDB;
 
-    // D. Success!
-    this.searchResult = 'valid';
+        // B. Is it already used?
+          if (this.searchedToken.status === 'Used') {
+            this.searchResult = 'used';
+            this.errorMessage = 'Alert: This token has already been marked as Used.';
+            return;
+          }
+
+        // C. Is it expired? (Converting the MongoDB date string into a real Date object)
+            const now = new Date();
+            const expiryDate = new Date(this.searchedToken.expiresAt);
+            
+            if (now > expiryDate || this.searchedToken.status === 'Expired') {
+                this.searchResult = 'expired';
+                this.errorMessage = 'This token has expired and is no longer valid.';
+                return;
+            }
+
+        // D. Success!
+        this.searchResult = 'valid';
+      },
+      error: (err) => {
+        // If the backend returns a 404 Not Found, it triggers this block
+        this.searchResult = 'invalid';
+        this.errorMessage = err.error?.message || 'Token not found in the database. Please check the code.';
+      }
+    });
   }
 
-  // 4. The Action Button
+  // // 4. The Action Button
+  // markAsUsed() {
+  //   if (this.searchedToken) {
+  //     this.searchedToken.status = 'Used'; // Updates the database
+  //     this.searchResult = 'used'; // Updates the UI
+  //   }
+  // }
+
+  // 4. The Action Button (Now updates MongoDB)
   markAsUsed() {
-    if (this.searchedToken) {
-      this.searchedToken.status = 'Used'; // Updates the database
-      this.searchResult = 'used'; // Updates the UI
+    if (this.searchedToken && this.searchedToken.id) {
+      // Tell Node.js to update this specific token in the database
+      this.db.markTokenAsUsed(this.searchedToken.id).subscribe({
+        next: () => {
+          // Update the UI only after MongoDB confirms the save was successful
+          if (this.searchedToken) {
+            this.searchedToken.status = 'Used'; 
+          }
+          this.searchResult = 'used'; 
+        },
+        error: (err) => {
+          this.errorMessage = 'Network error: Could not update the token in the database.';
+        }
+      });
     }
   }
 
-  // 5. Logout
+//   // 5. Logout
+//   onLogout() {
+//     this.db.currentUser = null;
+//     this.router.navigate(['/login']);
+
+//   }
+
+// }
+
+// 5. Logout
   onLogout() {
+    // 1. Clear Angular's session memory
     this.db.currentUser = null;
+    
+    // 2. Shred the JWT visitor badge from browser memory!
+    localStorage.removeItem('tms_token');
+    
+    // 3. Redirect
     this.router.navigate(['/login']);
-
   }
-
 }
   
 
