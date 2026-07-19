@@ -81,9 +81,14 @@ export class DatabaseService {
     // --- LIVE DATABASE CONNECTIONS ---
 
   // --- AUTHENTICATION ---
-  loginUser(email: string, password: string): Observable<any> {
-    return this.http.post<any>(`${this.apiUrl}/login`, { email, password });
-  }
+  // Update this method in DatabaseService.ts
+loginUser(email: string, password: string): Observable<any> {
+  // Ensure the body object matches the keys expected by your backend: { email, password }
+  return this.http.post<any>(`${this.apiUrl}/login`, { 
+    email: email, 
+    password: password 
+  });
+}
 
   signupUser(userData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/signup`, userData);
