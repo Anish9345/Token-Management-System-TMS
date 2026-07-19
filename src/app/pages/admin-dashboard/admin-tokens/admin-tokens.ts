@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { DatabaseService } from '../../../services/database.service';
 import { Token } from '../../../models';
 
@@ -12,6 +12,9 @@ import { Token } from '../../../models';
 export class AdminTokens {
 
   private db = inject(DatabaseService);
+
+    private cdr = inject(ChangeDetectorRef); // 2. Inject it
+
 
   allTokens: Token[] = [];
   successMessage: string = '';
@@ -123,6 +126,15 @@ export class AdminTokens {
 // }
 
 private refreshData() {
-    this.db.getAllTokens().subscribe(tokens => this.allTokens = tokens);
-  }
+  this.db.getAllTokens().subscribe(tokens => {
+    // 1. Map the ID
+    this.allTokens = tokens.map(t => ({
+      ...t,
+      id: t._id 
+    }));
+    
+    // 2. Force the UI to update
+    this.cdr.detectChanges(); 
+  });
+}
 }

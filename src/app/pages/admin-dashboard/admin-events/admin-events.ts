@@ -1,5 +1,5 @@
 import { CommonModule, DatePipe } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { DatabaseService } from '../../../services/database.service';
 import { Event } from '../../../models';
@@ -14,6 +14,9 @@ export class AdminEvents implements OnInit {
 
   private fb = inject(FormBuilder);
   private db = inject(DatabaseService);
+
+    private cdr = inject(ChangeDetectorRef); // 2. Inject it
+
 
   allEvents: Event[] = [];
   successMessage: string = '';
@@ -150,9 +153,16 @@ export class AdminEvents implements OnInit {
 // }
 
 private refreshData() {
-    // FETCH LIVE FROM MONGODB
-    this.db.getAllEvents().subscribe({
-      next: (eventsFromDB) => this.allEvents = eventsFromDB
-    });
-  }
+  this.db.getAllEvents().subscribe({
+    next: (eventsFromDB) => {
+      // THE FIX: Map _id to id
+      this.allEvents = eventsFromDB.map(e => ({
+        ...e,
+        id: e._id // Map the database ID so your UI can find it!
+      }));
+      
+      this.cdr.detectChanges(); // Use the injected service here!
+    }
+  });
+}
 }

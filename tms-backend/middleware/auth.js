@@ -17,7 +17,7 @@ const verifyToken = (req, res, next) => {
     const verifiedPayload = jwt.verify(cleanToken, process.env.JWT_SECRET);
     
     // 5. Attach the decrypted user data to the request so the next function can use it
-    req.user = verifiedPayload;
+    req.userId = verifiedPayload.userId;
     
     // 6. Pass control to the actual API route
     next();

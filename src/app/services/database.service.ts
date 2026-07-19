@@ -1,7 +1,7 @@
 import { inject, Injectable} from '@angular/core';
 import { Event, Token, User } from '../models';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, tap, catchError, of, lastValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -54,6 +54,8 @@ export class DatabaseService {
     // We keep this to store the active session data!
   currentUser: User | null = null;
 
+  
+
     // // We can keep the dummy events for now until we move them to MongoDB
     // events: Event[] = [
     //     {
@@ -78,63 +80,46 @@ export class DatabaseService {
 
     // --- LIVE DATABASE CONNECTIONS ---
 
-  // AUTHENTICATION: Send email/password to the Node.js Ticket Booth
+  // --- AUTHENTICATION ---
   loginUser(email: string, password: string): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/login`, { email, password });
   }
 
-  // AUTHENTICATION: Register a brand new user
   signupUser(userData: any): Observable<any> {
     return this.http.post<any>(`${this.apiUrl}/signup`, userData);
   }
 
-  // TOKENS: Send a new token to the Node.js backend
+  // Fetch profile for persistent login
+  loadUserProfile(): Observable<User | null> {
+    return this.http.get<User>(`${this.apiUrl}/profile`).pipe(
+      tap(user => this.currentUser = user),
+      catchError(() => {
+        this.currentUser = null;
+        localStorage.removeItem('tms_token');
+        return of(null);
+      })
+    );
+  }
+
+  // --- TOKENS (Student) ---
   saveTokenToDB(tokenData: any): Observable<Token> {
     return this.http.post<Token>(`${this.apiUrl}/tokens`, tokenData);
   }
 
-  // TOKENS: Fetch a student's tokens from the Node.js backend
   getTokensFromDB(userId: string): Observable<Token[]> {
     return this.http.get<Token[]>(`${this.apiUrl}/tokens/user/${userId}`);
   }
 
-
-// 2. An empty array to store the tokens as they are generated
-//   tokens: Token[] = [];
-
-    // ADD THIS LINE: Save the session!
-
-
-//     // --- LIVE DATABASE CONNECTIONS (Tokens) ---
-
-//   // CREATE: Send a new token to the Node.js backend
-//   saveTokenToDB(tokenData: any): Observable<Token> {
-//     return this.http.post<Token>(`${this.apiUrl}/tokens`, tokenData);
-//   }
-
-//   // READ: Fetch a student's tokens from the Node.js backend
-//   getTokensFromDB(userId: string): Observable<Token[]> {
-//     return this.http.get<Token[]>(`${this.apiUrl}/tokens/${userId}`);
-//   }
-// }
-
-// ==========================================
-  // TEACHER ENDPOINTS
-  // ==========================================
-  
+  // --- TEACHER ENDPOINTS ---
   searchTokenByString(tokenString: string): Observable<Token> {
     return this.http.get<Token>(`${this.apiUrl}/tokens/search/${tokenString}`);
   }
 
   markTokenAsUsed(tokenId: string): Observable<any> {
-    // We use PATCH to partially update the token's status
     return this.http.patch<any>(`${this.apiUrl}/tokens/${tokenId}/use`, {});
   }
 
-  // ==========================================
-  // ADMIN ENDPOINTS - USERS
-  // ==========================================
-  
+  // --- ADMIN ENDPOINTS - USERS ---
   getAllUsers(): Observable<User[]> {
     return this.http.get<User[]>(`${this.apiUrl}/users`);
   }
@@ -143,10 +128,7 @@ export class DatabaseService {
     return this.http.patch<any>(`${this.apiUrl}/users/${userId}`, updateData);
   }
 
-  // ==========================================
-  // ADMIN ENDPOINTS - EVENTS
-  // ==========================================
-  
+  // --- ADMIN ENDPOINTS - EVENTS ---
   getAllEvents(): Observable<Event[]> {
     return this.http.get<Event[]>(`${this.apiUrl}/events`);
   }
@@ -163,10 +145,7 @@ export class DatabaseService {
     return this.http.delete<any>(`${this.apiUrl}/events/${eventId}`);
   }
 
-  // ==========================================
-  // ADMIN ENDPOINTS - TOKENS
-  // ==========================================
-  
+  // --- ADMIN ENDPOINTS - TOKENS ---
   getAllTokens(): Observable<Token[]> {
     return this.http.get<Token[]>(`${this.apiUrl}/tokens`);
   }
@@ -178,4 +157,15 @@ export class DatabaseService {
   deleteAllTokens(): Observable<any> {
     return this.http.delete<any>(`${this.apiUrl}/tokens`);
   }
+}
+
+// Factory function for APP_INITIALIZER
+export function initializeApp(db: DatabaseService) {
+  return () => {
+    const token = localStorage.getItem('tms_token');
+    if (token) {
+      return lastValueFrom(db.loadUserProfile());
+    }
+    return Promise.resolve();
+  };
 }

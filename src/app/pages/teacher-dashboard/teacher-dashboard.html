@@ -75,6 +75,7 @@
 <div class="min-h-screen bg-gray-50 p-8">
   <div class="max-w-4xl mx-auto">
     
+    <!-- Header Section -->
     <header class="mb-8 flex justify-between items-center bg-white p-6 rounded-xl shadow-sm border border-gray-200">
       <div>
         <h1 class="text-3xl font-extrabold text-gray-900">Teacher Dashboard</h1>
@@ -94,6 +95,7 @@
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
       
+      <!-- Scan Token Section -->
       <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200 h-fit">
         <h2 class="text-xl font-bold text-gray-800 mb-6 flex items-center gap-2">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -128,9 +130,11 @@
         </form>
       </div>
 
+      <!-- Scan Result Section -->
       <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-200">
         <h2 class="text-xl font-bold text-gray-800 mb-6">Scan Result</h2>
 
+        <!-- Awaiting Scan -->
         @if (searchResult === 'idle') {
           <div class="text-center py-10 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 mx-auto text-gray-400 mb-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -140,6 +144,7 @@
           </div>
         }
 
+        <!-- Invalid Code -->
         @if (searchResult === 'invalid') {
           <div class="bg-red-50 border-2 border-red-200 rounded-lg p-6 text-center">
             <div class="text-red-500 text-4xl mb-2">⚠️</div>
@@ -148,6 +153,7 @@
           </div>
         }
 
+        <!-- Denied (Expired/Used) -->
         @if (searchResult === 'expired' || searchResult === 'used') {
           <div class="bg-red-50 border-2 border-red-200 rounded-lg p-6">
             <div class="text-center mb-4">
@@ -155,7 +161,6 @@
               <h3 class="text-lg font-bold text-red-800">Access Denied</h3>
               <p class="text-red-600 font-medium mt-1">{{ errorMessage }}</p>
             </div>
-            
             <div class="bg-white rounded border border-red-100 p-4 text-sm">
               <div class="flex justify-between mb-2 pb-2 border-b border-gray-100">
                 <span class="text-gray-500">Scanned Code:</span>
@@ -169,6 +174,7 @@
           </div>
         }
 
+        <!-- Valid -->
         @if (searchResult === 'valid') {
           <div class="bg-green-50 border-2 border-green-200 rounded-lg p-6">
             <div class="text-center mb-6">
@@ -176,7 +182,6 @@
               <h3 class="text-xl font-bold text-green-800">Access Granted</h3>
               <p class="text-green-600 font-medium mt-1">Token is authentic and ready for use.</p>
             </div>
-
             <div class="bg-white rounded border border-green-100 p-4 text-sm mb-6">
               <div class="flex justify-between mb-2 pb-2 border-b border-gray-100">
                 <span class="text-gray-500">Secure Code:</span>
@@ -187,19 +192,14 @@
                 <span class="font-bold text-gray-800">{{ searchedToken?.eventId }}</span>
               </div>
             </div>
-
             <button 
               (click)="markAsUsed()"
               class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-md shadow-sm transition-colors text-lg flex items-center justify-center gap-2"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-              </svg>
               Admit Student
             </button>
           </div>
         }
-
       </div>
     </div>
   </div>

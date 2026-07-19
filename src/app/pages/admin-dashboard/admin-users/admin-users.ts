@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { DatabaseService } from '../../../services/database.service';
 import { Role, User } from '../../../models';
 
@@ -12,6 +12,7 @@ import { Role, User } from '../../../models';
 export class AdminUsers implements OnInit{
 
   private db = inject(DatabaseService);
+  private cdr = inject(ChangeDetectorRef);  // 2. Inject it
 
   activeUsers: User[] = [];
   pendingUsers: User[] = [];
@@ -155,17 +156,18 @@ export class AdminUsers implements OnInit{
 // }
 
 private refreshData() {
-  console.log("Attempting to fetch users..."); // Step A: See if this even runs
   this.db.getAllUsers().subscribe({
     next: (usersFromDB) => {
-      console.log("Raw users from DB:", usersFromDB); // Step B: Look at this in your browser console!
+      const mappedUsers = usersFromDB.map(u => ({
+        ...u,
+        id: u._id
+      }));
       
-      this.pendingUsers = usersFromDB.filter(u => u.status === 'Pending');
-      this.activeUsers = usersFromDB.filter(u => u.status === 'Approved');
+      this.pendingUsers = mappedUsers.filter(u => u.status === 'Pending');
+      this.activeUsers = mappedUsers.filter(u => u.status === 'Approved');
       
-      console.log("Pending Users found:", this.pendingUsers); // Step C: Are these empty?
-    },
-    error: (err) => console.error("Error fetching users:", err)
+      this.cdr.detectChanges(); // 3. Force Angular to update the UI!
+    }
   });
 }
 }

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
 import { DatabaseService } from '../../../services/database.service';
 
 @Component({
@@ -10,6 +10,7 @@ import { DatabaseService } from '../../../services/database.service';
 export class AdminOverview implements OnInit{
   
   private db = inject(DatabaseService);
+  private cdr = inject(ChangeDetectorRef); // 2. Inject it
 
   // Dashboard Stats Variables
   totalUsers: number = 0;
@@ -38,21 +39,21 @@ export class AdminOverview implements OnInit{
 // }
 
   private calculateStats() {
-    // 1. Fetch Users
     this.db.getAllUsers().subscribe(users => {
       this.totalUsers = users.length;
       this.pendingApprovals = users.filter(u => u.status === 'Pending').length;
+      this.cdr.detectChanges(); // 3. Force UI refresh
     });
     
-    // 2. Fetch Events
     this.db.getAllEvents().subscribe(events => {
       this.totalEvents = events.length;
+      this.cdr.detectChanges(); // 3. Force UI refresh
     });
 
-    // 3. Fetch Tokens
     this.db.getAllTokens().subscribe(tokens => {
       this.totalTokens = tokens.length;
       this.activeTokens = tokens.filter(t => t.status === 'Active').length;
+      this.cdr.detectChanges(); // 3. Force UI refresh
     });
   }
 }

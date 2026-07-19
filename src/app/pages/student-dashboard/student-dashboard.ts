@@ -4,6 +4,7 @@ import { DatabaseService } from '../../services/database.service';
 import { Router } from '@angular/router';
 import { Token, Event } from '../../models';
 import { CommonModule } from '@angular/common';
+import { Observable } from 'rxjs'; // 1. Import Observable
 
 
 @Component({
@@ -17,6 +18,10 @@ export class StudentDashboard implements OnInit{
   private fb = inject(FormBuilder);
   private db = inject(DatabaseService);
   private router = inject(Router);
+
+  myTokens$: Observable<Token[]> | null = null;
+
+  // private cdr = inject(ChangeDetectorRef); // 2. Inject
 
   // Data for the UI
   availableEvents: Event[] = [];
@@ -105,12 +110,11 @@ export class StudentDashboard implements OnInit{
     const tokenPayload = {
       tokenString: `TKN-${this.generateSecureHex()}-${this.generateSecureHex()}`,
       userId: user.id, 
-      eventId: formValues.eventId,
+      eventId: formValues.eventId, // Ensure this ID matches the _id you get from getAllEvents()
       createdAt: new Date(),
       expiresAt: expirationDate,
       status: 'Active'
-    };
-
+  };
     // // Build the secure Token object
     // const newToken: Token = {
     //   id: 'tkn_' + Math.floor(Math.random() * 100000),
@@ -165,22 +169,12 @@ export class StudentDashboard implements OnInit{
 
 
 private refreshMyTokens() {
-    const user = this.db.currentUser;
-    
-    if (user && user.id) {
-      // Use the new network call to talk to Node.js
-      this.db.getTokensFromDB(user.id).subscribe({
-        next: (tokensFromDB: Token[]) => {
-          // Overwrite our empty array with the live data from MongoDB
-          this.myTokens = tokensFromDB;
-        },
-        error: (err) => {
-          this.errorMessage = 'Could not load tokens from the server.';
-          console.error(err);
-        }
-      });
-    }
+  const user = this.db.currentUser;
+  if (user && user.id) {
+    // 3. Just assign the observable directly (No .subscribe needed here!)
+    this.myTokens$ = this.db.getTokensFromDB(user.id);
   }
+}
 
   onLogout() {
     // 1. Clear Angular's session memory
