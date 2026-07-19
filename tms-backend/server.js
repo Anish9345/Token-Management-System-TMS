@@ -16,7 +16,10 @@ const verifyToken = require('./middleware/auth'); // Security middleware
 const app = express();
 
 // 3. Global Middleware
-app.use(cors());
+// app.use(cors());
+app.use(cors({
+  origin: 'https://token-management-system-tms.vercel.app'
+}));
 app.use(express.json());
 
 // 4. Test Route
