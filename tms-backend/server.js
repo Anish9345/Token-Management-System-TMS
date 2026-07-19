@@ -18,7 +18,7 @@ const app = express();
 // 3. Global Middleware
 // app.use(cors());
 app.use(cors({
-  origin: 'https://token-management-system-tms.vercel.app'
+  origin: 'https://token-management-system-tms.vercel.app/api'
 }));
 app.use(express.json());
 
