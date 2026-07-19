@@ -12,7 +12,7 @@ export class DatabaseService {
     private http = inject(HttpClient);
 
     // 3. The URL of your active Node.js server
-    private apiUrl = 'https://token-management-system-tms-ga8z.vercel.app/api';
+    private apiUrl = 'https://token-management-system-tms-ga8z.vercel.app';
   // private apiUrl = 'http://localhost:3000/api';
     // // 1. Our Fake Tables (Arrays)
     // users: User[] = [
