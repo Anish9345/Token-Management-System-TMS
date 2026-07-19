@@ -16,7 +16,6 @@ const verifyToken = require('./middleware/auth'); // Security middleware
 const app = express();
 
 // 3. Global Middleware
-// app.use(cors());
 app.use(cors({
   origin: 'https://token-management-system-tms.vercel.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -24,17 +23,21 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// 4. Test Route
+// 4. Robust Database Connection Helper
+const connectDB = async () => {
+  if (mongoose.connection.readyState >= 1) return;
+  await mongoose.connect(process.env.MONGODB_URI);
+};
+
+// 5. Routes
 app.get('/api/health', (req, res) => {
   res.status(200).json({ status: 'OK', message: 'TMS Backend Server is running.' });
 });
 
-// ==========================================
 // AUTHENTICATION ROUTES
-// ==========================================
-
 app.post('/api/signup', async (req, res) => {
   try {
+    await connectDB();
     const { name, email, password, role } = req.body;
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.status(400).json({ message: 'Email is already registered.' });
@@ -52,6 +55,7 @@ app.post('/api/signup', async (req, res) => {
 
 app.post('/api/login', async (req, res) => {
   try {
+    await connectDB();
     const { email, password } = req.body;
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ message: 'Invalid email or password.' });
@@ -73,6 +77,7 @@ app.post('/api/login', async (req, res) => {
 
 app.get('/api/profile', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const user = await User.findById(req.userId).select('-password');
     if (!user) return res.status(404).json({ message: 'User not found' });
     res.status(200).json({ id: user._id, name: user.name, email: user.email, role: user.role });
@@ -81,58 +86,45 @@ app.get('/api/profile', verifyToken, async (req, res) => {
   }
 });
 
-// ==========================================
-// TOKEN ROUTES (STUDENT & TEACHER)
-// ==========================================
-
-// Create token
+// TOKEN ROUTES
 app.post('/api/tokens', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const savedToken = await new Token(req.body).save();
     res.status(201).json(savedToken);
   } catch (error) { res.status(500).json({ message: 'Failed to create token' }); }
 });
 
-// Fetch user tokens
 app.get('/api/tokens/user/:userId', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const userTokens = await Token.find({ userId: req.params.userId }).sort({ createdAt: -1 });
     res.status(200).json(userTokens);
   } catch (error) { res.status(500).json({ message: 'Failed to fetch tokens' }); }
 });
 
-// Search token by string
 app.get('/api/tokens/search/:tokenString', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const token = await Token.findOne({ tokenString: req.params.tokenString });
     if (!token) return res.status(404).json({ message: 'Token not found.' });
     res.status(200).json(token);
-  } catch (error) {
-    res.status(500).json({ message: 'Server error while searching token.' });
-  }
+  } catch (error) { res.status(500).json({ message: 'Server error while searching token.' }); }
 });
 
-// Mark token as used
 app.patch('/api/tokens/:tokenId/use', verifyToken, async (req, res) => {
   try {
-    const updatedToken = await Token.findByIdAndUpdate(
-      req.params.tokenId, 
-      { status: 'Used' }, 
-      { new: true }
-    );
+    await connectDB();
+    const updatedToken = await Token.findByIdAndUpdate(req.params.tokenId, { status: 'Used' }, { new: true });
     if (!updatedToken) return res.status(404).json({ message: 'Token not found.' });
     res.status(200).json(updatedToken);
-  } catch (error) {
-    res.status(500).json({ message: 'Failed to update token status.' });
-  }
+  } catch (error) { res.status(500).json({ message: 'Failed to update token status.' }); }
 });
 
-// ==========================================
 // ADMIN ROUTES
-// ==========================================
-
 app.get('/api/users', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const users = await User.find({}).select('-password');
     res.status(200).json(users);
   } catch (error) { res.status(500).json({ message: 'Failed to fetch users' }); }
@@ -140,6 +132,7 @@ app.get('/api/users', verifyToken, async (req, res) => {
 
 app.patch('/api/users/:userId', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const updatedUser = await User.findByIdAndUpdate(req.params.userId, { $set: req.body }, { new: true }).select('-password');
     res.status(200).json(updatedUser);
   } catch (error) { res.status(500).json({ message: 'Failed to update user' }); }
@@ -147,6 +140,7 @@ app.patch('/api/users/:userId', verifyToken, async (req, res) => {
 
 app.get('/api/events', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const events = await Event.find({});
     res.status(200).json(events);
   } catch (error) { res.status(500).json({ message: 'Failed to fetch events' }); }
@@ -154,6 +148,7 @@ app.get('/api/events', verifyToken, async (req, res) => {
 
 app.post('/api/events', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const savedEvent = await new Event(req.body).save();
     res.status(201).json(savedEvent);
   } catch (error) { res.status(500).json({ message: 'Failed to create event' }); }
@@ -161,6 +156,7 @@ app.post('/api/events', verifyToken, async (req, res) => {
 
 app.patch('/api/events/:eventId', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const updated = await Event.findByIdAndUpdate(req.params.eventId, req.body, { new: true });
     res.status(200).json(updated);
   } catch (error) { res.status(500).json({ message: 'Failed to update event' }); }
@@ -168,6 +164,7 @@ app.patch('/api/events/:eventId', verifyToken, async (req, res) => {
 
 app.delete('/api/events/:eventId', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     await Event.findByIdAndDelete(req.params.eventId);
     res.status(200).json({ message: 'Deleted' });
   } catch (error) { res.status(500).json({ message: 'Failed to delete' }); }
@@ -175,6 +172,7 @@ app.delete('/api/events/:eventId', verifyToken, async (req, res) => {
 
 app.get('/api/tokens', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const allTokens = await Token.find({}).sort({ createdAt: -1 });
     res.status(200).json(allTokens);
   } catch (error) { res.status(500).json({ message: 'Failed to fetch audit log' }); }
@@ -182,6 +180,7 @@ app.get('/api/tokens', verifyToken, async (req, res) => {
 
 app.patch('/api/tokens/:tokenId/revoke', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     const t = await Token.findByIdAndUpdate(req.params.tokenId, { status: 'Expired' }, { new: true });
     res.status(200).json(t);
   } catch (error) { res.status(500).json({ message: 'Failed to revoke' }); }
@@ -189,18 +188,10 @@ app.patch('/api/tokens/:tokenId/revoke', verifyToken, async (req, res) => {
 
 app.delete('/api/tokens', verifyToken, async (req, res) => {
   try {
+    await connectDB();
     await Token.deleteMany({});
     res.status(200).json({ message: 'Cleared' });
   } catch (error) { res.status(500).json({ message: 'Failed to clear' }); }
 });
 
-// 6. Connect & Start
-const PORT = process.env.PORT || 3000;
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => {
-    console.log('✅ Connected to MongoDB');
-    // app.listen(PORT, () => console.log(`🚀 Server on port ${PORT}`));
-  })
-  .catch((err) => console.error('❌ Connection error:', err.message));
-
-  module.exports = app;
+module.exports = app;
