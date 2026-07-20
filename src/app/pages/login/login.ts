@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { DatabaseService } from '../../services/database.service';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -16,6 +16,8 @@ export class Login {
   private fb = inject(FormBuilder);
   private db = inject(DatabaseService);
   private router = inject(Router);
+
+  private cdr = inject(ChangeDetectorRef); // 2. Inject it
   
   errorMessage: string = '';
 
@@ -80,6 +82,9 @@ export class Login {
         console.error("Login Error Details:", err);
         // If the backend returns a 401 or 403, grab the exact message sent from Node.js
         this.errorMessage = err.error?.message || 'Invalid Email or Password.';
+
+        // 2. ADD THIS LINE HERE: This forces Angular to refresh the UI immediately
+        this.cdr.detectChanges();
       }
     });
   }
