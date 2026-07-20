@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { DatabaseService } from '../../services/database.service';
@@ -16,9 +16,11 @@ export class Signup {
   private fb = inject(FormBuilder);
   private db = inject(DatabaseService);
   private router = inject(Router);
+  private cdr = inject(ChangeDetectorRef); // 2. Inject it
 
   errorMessage: string = '';
   successMessage: string = '';
+  isLoading: boolean = false; // 3. Add loading flag
 
   reactiveForm: FormGroup = this.fb.group({
     name: [
@@ -88,6 +90,8 @@ export class Signup {
       return;
     }
     
+    this.isLoading = true; // 4. Start loading
+
     // 2. Extract ONLY the fields the backend needs
     const { name, email, password } = this.reactiveForm.value;
 
@@ -95,6 +99,8 @@ export class Signup {
     this.db.signupUser({ name, email, password }).subscribe({
       next: (response: any) => {
         
+        this.isLoading = false; // 5. Stop loading on success
+
         // Show success message and clear the form
         this.successMessage = response.message || 'Signup successful! Please wait for an Admin to verify your account.';
         this.reactiveForm.reset();
@@ -105,8 +111,12 @@ export class Signup {
         }, 3000);
       },
       error: (err) => {
+        this.isLoading = false; // 6. Stop loading on error
+
         // If Node.js throws an error (like Duplicate Email), display it here
         this.errorMessage = err.error?.message || 'Server error during registration. Email might be taken.';
+
+        this.cdr.detectChanges(); // 7. Force refresh UI
       }
     });
   }
