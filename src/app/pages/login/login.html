@@ -97,11 +97,13 @@
         </div>
       }
 
+      <!-- UPDATED BUTTON: Added [disabled] and dynamic text -->
       <button 
         type="submit" 
-        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors"
+        [disabled]="isLoading"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition-colors disabled:bg-blue-400 disabled:cursor-not-allowed"
       >
-        Sign In
+        {{ isLoading ? 'Verifying...' : 'Sign In' }}
       </button>
 
     </form>

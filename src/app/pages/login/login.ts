@@ -20,6 +20,7 @@ export class Login {
   private cdr = inject(ChangeDetectorRef); // 2. Inject it
   
   errorMessage: string = '';
+  isLoading: boolean = false; // 1. Add this flag
 
   reactiveForm: FormGroup = this.fb.group({
     email: [
@@ -54,6 +55,8 @@ export class Login {
       return;
     }
 
+    this.isLoading = true; // 2. Start loading
+
 // 2. Extract both values
     const { email, password } = this.reactiveForm.value;
 
@@ -61,6 +64,8 @@ export class Login {
     this.db.loginUser(email, password).subscribe({
       next: (response: any) => {
         
+        this.isLoading = false; // 3. Stop loading on success
+
         // 1. Save the mathematically signed JWT to the browser's memory!
         localStorage.setItem('tms_token', response.token); 
 
@@ -80,6 +85,9 @@ export class Login {
       },
       error: (err) => {
         console.error("Login Error Details:", err);
+
+        this.isLoading = false; // 4. Stop loading on error
+        
         // If the backend returns a 401 or 403, grab the exact message sent from Node.js
         this.errorMessage = err.error?.message || 'Invalid Email or Password.';
 
