@@ -77,6 +77,7 @@ export class Login {
         }
       },
       error: (err) => {
+        console.error("Login Error Details:", err);
         // If the backend returns a 401 or 403, grab the exact message sent from Node.js
         this.errorMessage = err.error?.message || 'Invalid Email or Password.';
       }
