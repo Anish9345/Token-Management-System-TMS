@@ -168,7 +168,7 @@
               </div>
               <div class="flex justify-between pb-2 border-b border-gray-100">
                 <span class="text-gray-500">Event Name:</span>
-                <span class="font-bold text-gray-800">{{ searchedToken?.eventId?.name || 'N/A' }}</span>
+                <span class="font-bold text-gray-800">{{ searchedToken?.eventId?.name || searchedToken?.eventId || 'N/A' }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-500">Current Status:</span>
@@ -193,7 +193,7 @@
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-500">Event Name:</span>
-                <span class="font-bold text-gray-800">{{ searchedToken?.eventId?.name || 'N/A' }}</span>
+                <span class="font-bold text-gray-800">{{ searchedToken?.eventId?.name || searchedToken?.eventId || 'N/A' }}</span>
               </div>
             </div>
             <button 
