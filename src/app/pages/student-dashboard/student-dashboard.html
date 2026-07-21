@@ -174,7 +174,7 @@
               <thead>
                 <tr class="bg-gray-50 text-gray-600 text-sm uppercase tracking-wider border-y border-gray-200">
                   <th class="p-4 font-semibold">Secure Code</th>
-                  <th class="p-4 font-semibold">Event Name</th>
+                  <th class="p-4 font-semibold">Event ID</th>
                   <th class="p-4 font-semibold">Created</th>
                   <th class="p-4 font-semibold">Expires</th>
                   <th class="p-4 font-semibold">Status</th>
@@ -185,8 +185,7 @@
                 @for (token of myTokens$ | async; track token._id) {
                   <tr class="hover:bg-gray-50 transition-colors text-sm text-gray-800">
                     <td class="p-4 font-mono font-bold text-blue-700">{{ token.tokenString }}</td>
-                    <!-- UPDATED: Displaying event name safely -->
-                    <td class="p-4 font-semibold text-gray-700">{{ token.eventId?.name || 'N/A' }}</td>
+                    <td class="p-4">{{ token.eventId }}</td>
                     <td class="p-4 text-gray-500">{{ token.createdAt | date:'mediumDate' }}</td>
                     <td class="p-4 text-gray-500">{{ token.expiresAt | date:'mediumDate' }}</td>
                     <td class="p-4">

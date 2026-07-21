@@ -161,14 +161,10 @@
               <h3 class="text-lg font-bold text-red-800">Access Denied</h3>
               <p class="text-red-600 font-medium mt-1">{{ errorMessage }}</p>
             </div>
-            <div class="bg-white rounded border border-red-100 p-4 text-sm space-y-2">
-              <div class="flex justify-between pb-2 border-b border-gray-100">
+            <div class="bg-white rounded border border-red-100 p-4 text-sm">
+              <div class="flex justify-between mb-2 pb-2 border-b border-gray-100">
                 <span class="text-gray-500">Scanned Code:</span>
                 <span class="font-mono font-bold text-gray-800">{{ searchedToken?.tokenString }}</span>
-              </div>
-              <div class="flex justify-between pb-2 border-b border-gray-100">
-                <span class="text-gray-500">Event Name:</span>
-                <span class="font-bold text-gray-800">{{ searchedToken?.eventId?.name || searchedToken?.eventId || 'N/A' }}</span>
               </div>
               <div class="flex justify-between">
                 <span class="text-gray-500">Current Status:</span>
@@ -186,14 +182,14 @@
               <h3 class="text-xl font-bold text-green-800">Access Granted</h3>
               <p class="text-green-600 font-medium mt-1">Token is authentic and ready for use.</p>
             </div>
-            <div class="bg-white rounded border border-green-100 p-4 text-sm mb-6 space-y-2">
-              <div class="flex justify-between pb-2 border-b border-gray-100">
+            <div class="bg-white rounded border border-green-100 p-4 text-sm mb-6">
+              <div class="flex justify-between mb-2 pb-2 border-b border-gray-100">
                 <span class="text-gray-500">Secure Code:</span>
                 <span class="font-mono font-bold text-gray-800">{{ searchedToken?.tokenString }}</span>
               </div>
               <div class="flex justify-between">
-                <span class="text-gray-500">Event Name:</span>
-                <span class="font-bold text-gray-800">{{ searchedToken?.eventId?.name || searchedToken?.eventId || 'N/A' }}</span>
+                <span class="text-gray-500">Event ID:</span>
+                <span class="font-bold text-gray-800">{{ searchedToken?.eventId }}</span>
               </div>
             </div>
             <button 

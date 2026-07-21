@@ -98,9 +98,7 @@ app.post('/api/tokens', verifyToken, async (req, res) => {
 app.get('/api/tokens/user/:userId', verifyToken, async (req, res) => {
   try {
     await connectDB();
-    const userTokens = await Token.find({ userId: req.params.userId })
-      .populate('eventId', 'name') // <-- This pulls the Event name automatically
-      .sort({ createdAt: -1 });
+    const userTokens = await Token.find({ userId: req.params.userId }).sort({ createdAt: -1 });
     res.status(200).json(userTokens);
   } catch (error) { res.status(500).json({ message: 'Failed to fetch tokens' }); }
 });
@@ -108,9 +106,7 @@ app.get('/api/tokens/user/:userId', verifyToken, async (req, res) => {
 app.get('/api/tokens/search/:tokenString', verifyToken, async (req, res) => {
   try {
     await connectDB();
-    // ADDED .populate('eventId', 'name') HERE SO TEACHER DASHBOARD GETS THE EVENT NAME
-    const token = await Token.findOne({ tokenString: req.params.tokenString })
-      .populate('eventId', 'name');
+    const token = await Token.findOne({ tokenString: req.params.tokenString });
     if (!token) return res.status(404).json({ message: 'Token not found.' });
     res.status(200).json(token);
   } catch (error) { res.status(500).json({ message: 'Server error while searching token.' }); }
@@ -177,9 +173,7 @@ app.delete('/api/events/:eventId', verifyToken, async (req, res) => {
 app.get('/api/tokens', verifyToken, async (req, res) => {
   try {
     await connectDB();
-    const allTokens = await Token.find({})
-      .populate('eventId', 'name') // <-- Ensures audit logs also include the event name
-      .sort({ createdAt: -1 });
+    const allTokens = await Token.find({}).sort({ createdAt: -1 });
     res.status(200).json(allTokens);
   } catch (error) { res.status(500).json({ message: 'Failed to fetch audit log' }); }
 });
